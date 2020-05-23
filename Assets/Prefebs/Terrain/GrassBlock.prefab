@@ -15,7 +15,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 3
 --- !u!65 &-3762523168941200359
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -39,17 +39,17 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: f9758d3e55a438840bb5e16ea1dcc385,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.802916
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: f9758d3e55a438840bb5e16ea1dcc385,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.38403034
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: f9758d3e55a438840bb5e16ea1dcc385,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.01594019
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: f9758d3e55a438840bb5e16ea1dcc385,
         type: 3}
@@ -99,7 +99,7 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: f9758d3e55a438840bb5e16ea1dcc385,
         type: 3}
       propertyPath: m_Name
-      value: cliff_blockHalf_rock Variant
+      value: GrassBlock
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f9758d3e55a438840bb5e16ea1dcc385, type: 3}

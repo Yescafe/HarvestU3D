@@ -5,15 +5,16 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     public Transform trackee;
-    public Transform mainCamera;
 
     public float height;
     public float distance;
     public float deltaScale;
+    
+    private Transform mainCamera;
 
     void Start()
     {
-        
+        mainCamera = Camera.main.transform;   
     }
 
     void Update()

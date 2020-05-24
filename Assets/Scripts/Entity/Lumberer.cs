@@ -78,6 +78,7 @@ public class Lumberer : MonoBehaviour
     {
         this.isAlive = false;
         DeathAnimation();
+        // TODO 修改成 animator ... onExit 之类的
         Invoke("TrueDie", dieSpeed);
     }
 

@@ -2,27 +2,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ground : MonoBehaviour
+public class Ground : DCLSingletonBase<Ground>
 {
     public GameObject grassBlockPrefeb;
-    public Transform ground;
     public float rate;
     public float sideWidth = 15f;
 
-    private List<GameObject> grassBlocks;
+    private List<GameObject> grassBlocks = new List<GameObject>();
 
     void Start()
     {
-        // Construct
-        grassBlocks = new List<GameObject>();
-
         // Test part
         // InvokeRepeating("ClockBehavior", rate, rate);  // do ClockBehavior() per 3 sec.
+    }
 
-        // Set ground
+    [ContextMenu("CreateGround")]
+    public void CreateGround()
+    {
+        Helper.ClearAllChild(base.transform);
         for (float x = -sideWidth / 2; x <= sideWidth / 2; x += 1f)
             for (float y = -sideWidth / 2; y <= sideWidth / 2; y += 1f)
-                grassBlocks.Add(Instantiate<GameObject>(grassBlockPrefeb, new Vector3(x, 0f, y), Quaternion.identity, ground));
+                grassBlocks.Add(Instantiate<GameObject>(grassBlockPrefeb, new Vector3(x, 0f, y), Quaternion.identity, transform));
     }
 
     void ClockBehavior()

@@ -7,14 +7,12 @@ public class Lumberer : MonoBehaviour
 {
     public float speed;                 // walking speed 
     public float turnSpeed;             // turning speed
-    public float attackSpeed;           // time spent during attacking
-    private float dieSpeed;             // time spent during dying (can't modify in the editor)
 
     private CharacterController cc;
     private Animator animator;
 
     private bool isAlive = true;
-    private bool isAttacking = false;
+    public bool isAttacking { get; set; } = false;
 
     public float health = 10f;
 
@@ -37,6 +35,11 @@ public class Lumberer : MonoBehaviour
             // animator.SetFloat("velocity", (float)Math.Abs(cc.velocity.x + cc.velocity.z));
             animator.SetFloat("velocity", cc.velocity.magnitude);
         }
+    }
+
+    public void Stop()
+    {
+        this.Walk(new Vector3(0f, 0f, 0f));
     }
 
     public void Face(Vector3 lookAt)
@@ -66,12 +69,7 @@ public class Lumberer : MonoBehaviour
         }
 
         this.isAttacking = true;
-        Invoke("finishAttack", attackSpeed);
-    }
-
-    private void finishAttack()
-    {
-        this.isAttacking = false;
+        // 对 isAttacking 状态的解除已由 Animator 的脚本托管
     }
 
     public void Death()
@@ -79,7 +77,8 @@ public class Lumberer : MonoBehaviour
         this.isAlive = false;
         DeathAnimation();
         // TODO 修改成 animator ... onExit 之类的
-        Invoke("TrueDie", dieSpeed);
+        // Invoke("TrueDie", dieSpeed);
+        // 已完成由 Animator 的托管
     }
 
     private void DeathAnimation()
@@ -87,7 +86,7 @@ public class Lumberer : MonoBehaviour
 
     }
 
-    private void TrueDie()
+    public void TrueDie()
     {
         DestroyImmediate(this.GetComponent<GameObject>());
     }

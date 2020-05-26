@@ -22,12 +22,17 @@ public class LumbererManager : DCLSingletonBase<LumbererManager>
         var h = Input.GetAxis("Horizontal");
         var v = Input.GetAxis("Vertical");
 
-        lumberer.Walk(new Vector3(h, 0f, v));
-
-        var lookAt = Vector3.forward * v + Vector3.right * h;
-        if (lookAt.magnitude != 0)
+        if (!GetComponent<Lumberer>().isAttacking)
         {
-            lumberer.Face(lookAt);
+            lumberer.Walk(new Vector3(h, 0f, v));
+
+            var lookAt = Vector3.forward * v + Vector3.right * h;
+            if (lookAt.magnitude != 0)
+            {
+                lumberer.Face(lookAt);
+            }
         }
+        else
+            lumberer.Stop();
     }
 }

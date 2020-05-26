@@ -19,7 +19,7 @@ public class Ground : DCLSingletonBase<Ground>
     [ContextMenu("CreateGround")]
     public void CreateGround()
     {
-        Helper.ClearAllChild(base.transform);
+        Helper.ClearAllChild(transform);
         for (float x = -sideWidth / 2; x <= sideWidth / 2; x += 1f)
             for (float y = -sideWidth / 2; y <= sideWidth / 2; y += 1f)
                 grassBlocks.Add(Instantiate<GameObject>(grassBlockPrefeb, new Vector3(x, 0f, y), Quaternion.identity, transform));

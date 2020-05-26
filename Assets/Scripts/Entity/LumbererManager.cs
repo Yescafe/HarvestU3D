@@ -6,12 +6,17 @@ using UnityEngine.Rendering;
 public class LumbererManager : DCLSingletonBase<LumbererManager>
 {
     Lumberer lumberer;
+    private KdTree<Lumberer> lumberers = new KdTree<Lumberer>();
 
     void Start()
     {
         lumberer = GetComponent<Lumberer>();
+        Debug.Assert(lumberer != null);
+        Debug.Assert(Trees.I.GetClosestTree(lumberer.transform.position) != null, $"{Trees.I.trees.Count}");
+        lumberer.SetDestination(Trees.I.GetClosestTree(lumberer.transform.position).transform.position);
     }
 
+#if USER_CONTROL
     void Update()
     {
         if (Input.GetButtonDown("Fire1"))
@@ -36,13 +41,14 @@ public class LumbererManager : DCLSingletonBase<LumbererManager>
         else
             lumberer.Stop();
     }
+#endif
 
-    private void OnTriggerStay(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("OnTriggerStay");
+        Debug.Log("OnTriggerEnter");
         if (lumberer.isAttacking && other.gameObject.CompareTag("Tree"))
         {
-            Debug.Log("OnTriggerStay Ran");
+            Debug.Log("OnTriggerEnter Ran");
             var damage = lumberer.power - other.gameObject.GetComponent<Tree>().defense;
             damage = damage < 0f ? 0f : damage;
             Debug.Log("Get Damage: " + damage);

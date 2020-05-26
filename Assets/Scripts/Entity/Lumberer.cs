@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Lumberer : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class Lumberer : MonoBehaviour
 
     private CharacterController cc;
     private Animator animator;
+    private NavMeshAgent agent;
     
 
     private bool isAlive = true;
@@ -23,7 +25,19 @@ public class Lumberer : MonoBehaviour
     {
         cc = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
+        agent = GetComponent<NavMeshAgent>();
     }
+
+    #region Navigation
+
+    public void SetDestination(Vector3 target) {
+        Debug.Log($"Setted Destination: {target}");
+        Debug.Assert(agent.SetDestination(target), "Set Destination Failed");
+    }
+
+    #endregion
+
+    #region Move
 
     public void Walk(Vector3 velocity)
     {
@@ -58,6 +72,10 @@ public class Lumberer : MonoBehaviour
 
         transform.rotation = slerp;
     }
+
+    #endregion
+
+    #region Attack and HP
 
     public void Attack1()
     {
@@ -111,4 +129,6 @@ public class Lumberer : MonoBehaviour
     {
 
     }
+    
+    #endregion
 }

@@ -82,8 +82,6 @@ public class Bird : MonoBehaviour
         float targetRotZ = maxRotZ * Mathf.Sign(input.x);
         float rotZ = Mathf.LerpAngle(oldRot.z, targetRotZ, Time.deltaTime * rotZScale);
 
-        // 最后这个 Input.x 有回弹的痕迹，如果本身是负数的话，松开按钮会突然成为整数
-        // 为了避免抖动，避免使用 直接的映射计算然后赋值
         transform.rotation = Quaternion.Euler(oldRot.x, oldRot.y + deltaRotY, rotZ);
     }
 

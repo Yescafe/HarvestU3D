@@ -8,8 +8,11 @@ public class Lumberer : MonoBehaviour
     public float speed;                 // walking speed 
     public float turnSpeed;             // turning speed
 
+    public float power = 5f;            // attack power
+
     private CharacterController cc;
     private Animator animator;
+    
 
     private bool isAlive = true;
     public bool isAttacking { get; set; } = false;

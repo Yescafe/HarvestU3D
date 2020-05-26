@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class LumbererManager : DCLSingletonBase<LumbererManager>
 {
@@ -34,5 +35,18 @@ public class LumbererManager : DCLSingletonBase<LumbererManager>
         }
         else
             lumberer.Stop();
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        Debug.Log("OnTriggerStay");
+        if (lumberer.isAttacking && other.gameObject.CompareTag("Tree"))
+        {
+            Debug.Log("OnTriggerStay Ran");
+            var damage = lumberer.power - other.gameObject.GetComponent<Tree>().defense;
+            damage = damage < 0f ? 0f : damage;
+            Debug.Log("Get Damage: " + damage);
+            other.gameObject.GetComponent<Tree>().GetDamage(damage);
+        }
     }
 }

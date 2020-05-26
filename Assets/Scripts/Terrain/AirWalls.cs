@@ -13,7 +13,7 @@ public class AirWalls : DCLSingletonBase<AirWalls>
 
 	public void Generate()
     {
-        Helper.ClearAllChild(base.transform);
+        Helper.ClearAllChild(transform);
         var sideWidth = Ground.I.sideWidth;
 
         // Set air walls (4-direction)

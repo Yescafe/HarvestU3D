@@ -28,7 +28,6 @@ public class Trees : DCLSingletonBase<Trees>
         // 并且在 ground 进行变化以后依然可以随着扩大，而不是只是在 start 中得到一个起始固定值
         sideWidth = Ground.I.sideWidth;
 
-        Helper.ClearAllChild(base.transform);
         for (int i = 0; i < treeNumberToGen; i++)
         {
             // generator?.Invoke();

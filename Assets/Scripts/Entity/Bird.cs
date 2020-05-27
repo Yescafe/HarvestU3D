@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bird : MonoBehaviour
+public class Bird : MonoBehaviour, IEntity
 {
     // 转向速度，单位是 度每秒
     public float rotSpeed = 1f;
@@ -88,5 +88,10 @@ public class Bird : MonoBehaviour
     void OnDrawGizmos()
     {
         Gizmos.DrawSphere(target, 1f);
+    }
+
+    public void TakeDamage(float damage, GameObject attaker)
+    {
+
     }
 }

@@ -52,7 +52,7 @@ public class LumbererManager : DCLSingletonBase<LumbererManager>
             var damage = lumberer.power - other.gameObject.GetComponent<Tree>().defense;
             damage = damage < 0f ? 0f : damage;
             Debug.Log("Get Damage: " + damage);
-            other.gameObject.GetComponent<Tree>().GetDamage(damage);
+            other.gameObject.GetComponent<Tree>().TakeDamage(damage, other.gameObject);
         }
     }
 }

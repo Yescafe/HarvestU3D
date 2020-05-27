@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Lumberer : MonoBehaviour
+public class Lumberer : MonoBehaviour, IEntity
 {
     public float speed;                 // walking speed 
     public float turnSpeed;             // turning speed
@@ -112,7 +112,7 @@ public class Lumberer : MonoBehaviour
         DestroyImmediate(this.GetComponent<GameObject>());
     }
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(float damage, GameObject attaker)
     {
         this.health -= damage;
         if (health <= 0f && isAlive)

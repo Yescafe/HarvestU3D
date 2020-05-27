@@ -10,7 +10,7 @@ public class Trees : DCLSingletonBase<Trees>
     /// 包含 碰撞体 和 Tree 脚本的模板
     /// </summary>
     public GameObject treeTemplate;
-    public float sideWidth;
+    public float sideWidth = 10f;
     public int treeNumberToGen;
 
     // TODO 修改成 private
@@ -35,6 +35,7 @@ public class Trees : DCLSingletonBase<Trees>
         // 如果放在 Start 中，在 Editor 状态下不会去执行，因此放在该函数内部
 
         Helper.ClearAllChild(transform);
+        trees.Clear();
         for (int i = 0; i < treeNumberToGen; i++)
         {
             // generator?.Invoke();

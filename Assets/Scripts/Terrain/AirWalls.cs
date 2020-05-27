@@ -14,7 +14,8 @@ public class AirWalls : DCLSingletonBase<AirWalls>
 	public void Generate()
     {
         Helper.ClearAllChild(transform);
-        var sideWidth = Ground.I.sideWidth;
+        var sideWidth = Trees.I.sideWidth;
+        // var sideWidth = 15f;
 
         // Set air walls (4-direction)
         // `sideWidth / 10 + 2` means (`N` of grassBlocks on a side) + 2

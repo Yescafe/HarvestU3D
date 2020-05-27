@@ -14,6 +14,7 @@ public class Bird : MonoBehaviour, IEntity
     // TODO 删除 cc
     private CharacterController cc;
     private Vector3 target;
+    private string logInfo;
 
     void Start()
     {
@@ -28,36 +29,64 @@ public class Bird : MonoBehaviour, IEntity
         {
             SetTargetOnPlane();
         }
-        // TraceTarget();
-        HandleByUserInput();
+        TraceTarget();
+        // HandleByUserInput();
 
         Vector3 deltaPos = transform.localToWorldMatrix * Vector3.forward * Time.deltaTime * moveSpeed;
-        transform.Translate(deltaPos);
+        transform.position = transform.position + deltaPos;
+        // transform.Translate(deltaPos);
         // cc.Move(deltaPos);
     }
 
     void TraceTarget()
     {
         var oldRot = transform.rotation;
-        var rotZ = oldRot.z;
+        var rotZ = oldRot.eulerAngles.z;
 
         Vector3 local2TargetDir = (transform.worldToLocalMatrix * (target - transform.position)).normalized;
         Debug.Log(local2TargetDir);
         float deltaRotY = 0f;
         float targetRotZ = 0f;
-        if (local2TargetDir.x > 0f)
+        if (local2TargetDir.x > Mathf.Epsilon)
         {
             deltaRotY = Time.deltaTime * rotSpeed;
-            targetRotZ = maxRotZ;
-        }
-        else if (local2TargetDir.x > 0f)
-        {
-            deltaRotY = -Time.deltaTime * rotSpeed;
             targetRotZ = -maxRotZ;
         }
-        rotZ = Mathf.LerpAngle(rotZ, targetRotZ, Time.deltaTime * rotZScale);
+        else if (local2TargetDir.x < -Mathf.Epsilon)
+        {
+            deltaRotY = -Time.deltaTime * rotSpeed;
+            targetRotZ = maxRotZ;
+        }
 
-        transform.rotation = Quaternion.Euler(oldRot.x, oldRot.y + deltaRotY, rotZ);
+        float ModifyAngle(float dst)
+        {
+            if (dst > 180)
+                return dst - 360;
+            else if (dst < -180)
+                return dst + 360;
+            else
+                return dst;
+        }
+
+        float ApproachAngle(float src, float dst, float absDelta)
+        {
+            dst = ModifyAngle(dst);
+            src = ModifyAngle(src);
+
+            if (src == dst)
+                return src;
+            else if (dst - src < 0f)
+                return Mathf.Max(dst, src - absDelta);
+            else
+                return Mathf.Min(dst, src + absDelta);
+        }
+
+        rotZ = ApproachAngle(rotZ, targetRotZ, Time.deltaTime * rotZScale);
+        float rotY = oldRot.eulerAngles.y + deltaRotY;
+        logInfo = $"RotZ {rotZ}\n RotY {rotY}\n deltaRotY {deltaRotY}";
+        // rotZ = Mathf.LerpAngle(rotZ, targetRotZ, Time.deltaTime * rotZScale);
+
+        transform.rotation = Quaternion.Euler(oldRot.x, rotY, rotZ);
     }
 
     /// <summary>
@@ -93,5 +122,10 @@ public class Bird : MonoBehaviour, IEntity
     public void TakeDamage(float damage, GameObject attaker)
     {
 
+    }
+
+    void OnGUI()
+    {
+        GUI.Label(new Rect(0, 0, 200, 80), logInfo);
     }
 }

@@ -25,10 +25,10 @@ public class Bird : MonoBehaviour, IEntity
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            SetTargetOnPlane();
-        }
+        // if (Input.GetMouseButtonDown(0))
+        // {
+        //     SetTargetOnPlane();
+        // }
         TraceTarget();
         // HandleByUserInput();
 
@@ -44,7 +44,7 @@ public class Bird : MonoBehaviour, IEntity
         var rotZ = oldRot.eulerAngles.z;
 
         Vector3 local2TargetDir = (transform.worldToLocalMatrix * (target - transform.position)).normalized;
-        Debug.Log(local2TargetDir);
+
         float deltaRotY = 0f;
         float targetRotZ = 0f;
         if (local2TargetDir.x > Mathf.Epsilon)
@@ -73,19 +73,20 @@ public class Bird : MonoBehaviour, IEntity
             dst = ModifyAngle(dst);
             src = ModifyAngle(src);
 
-            if (src == dst)
-                return src;
-            else if (dst - src < 0f)
+            if (dst - src < -Mathf.Epsilon)
                 return Mathf.Max(dst, src - absDelta);
-            else
+            else if (dst - src > Mathf.Epsilon)
                 return Mathf.Min(dst, src + absDelta);
+            else
+                return src;
         }
 
-        rotZ = ApproachAngle(rotZ, targetRotZ, Time.deltaTime * rotZScale);
+        // rotZ = ApproachAngle(rotZ, targetRotZ, Time.deltaTime * rotZScale);
         float rotY = oldRot.eulerAngles.y + deltaRotY;
-        logInfo = $"RotZ {rotZ}\n RotY {rotY}\n deltaRotY {deltaRotY}";
-        // rotZ = Mathf.LerpAngle(rotZ, targetRotZ, Time.deltaTime * rotZScale);
+        if (Mathf.Abs(Mathf.DeltaAngle(rotZ, targetRotZ)) > Mathf.Epsilon)
+            rotZ = Mathf.LerpAngle(rotZ, targetRotZ, Time.deltaTime * rotZScale);
 
+        logInfo = $"RotZ {rotZ}\n RotY {rotY}\n deltaRotY {deltaRotY}\n {local2TargetDir}";
         transform.rotation = Quaternion.Euler(oldRot.x, rotY, rotZ);
     }
 
@@ -101,17 +102,6 @@ public class Bird : MonoBehaviour, IEntity
             SetTarget(raycastHit.point);
             Debug.DrawRay(ray.origin, raycastHit.point);
         }
-    }
-
-    void HandleByUserInput()
-    {
-        Vector3 input = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxisRaw("Vertical"), 0);
-        var oldRot = transform.rotation;
-        float deltaRotY = input.x * Time.deltaTime * rotSpeed;
-        float targetRotZ = maxRotZ * Mathf.Sign(input.x);
-        float rotZ = Mathf.LerpAngle(oldRot.z, targetRotZ, Time.deltaTime * rotZScale);
-
-        transform.rotation = Quaternion.Euler(oldRot.x, oldRot.y + deltaRotY, rotZ);
     }
 
     void OnDrawGizmos()

@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Tree
+  - Bird
+  - Lumberer
   layers:
   - Default
   - TransparentFX
@@ -15,9 +17,9 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
-  - 
+  - Bird
+  - Tree
+  - Lumberer
   - 
   - 
   - 

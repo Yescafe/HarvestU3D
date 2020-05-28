@@ -11,15 +11,8 @@ public class Bird : MonoBehaviour, IEntity
 
     public float moveSpeed = 10f;
 
-    // TODO 删除 cc
-    private CharacterController cc;
     private Vector3 target;
     private string logInfo;
-
-    void Start()
-    {
-        cc = GetComponent<CharacterController>();
-    }
 
     public void SetTarget(Vector3 target_) => target = target_;
 
@@ -30,12 +23,10 @@ public class Bird : MonoBehaviour, IEntity
         //     SetTargetOnPlane();
         // }
         TraceTarget();
-        // HandleByUserInput();
 
         Vector3 deltaPos = transform.localToWorldMatrix * Vector3.forward * Time.deltaTime * moveSpeed;
         transform.position = transform.position + deltaPos;
         // transform.Translate(deltaPos);
-        // cc.Move(deltaPos);
     }
 
     void TraceTarget()
@@ -47,43 +38,19 @@ public class Bird : MonoBehaviour, IEntity
 
         float deltaRotY = 0f;
         float targetRotZ = 0f;
-        if (local2TargetDir.x > Mathf.Epsilon)
+        if (local2TargetDir.x > 0.1f)
         {
             deltaRotY = Time.deltaTime * rotSpeed;
             targetRotZ = -maxRotZ;
         }
-        else if (local2TargetDir.x < -Mathf.Epsilon)
+        else if (local2TargetDir.x < -0.1f)
         {
             deltaRotY = -Time.deltaTime * rotSpeed;
             targetRotZ = maxRotZ;
         }
 
-        float ModifyAngle(float dst)
-        {
-            if (dst > 180)
-                return dst - 360;
-            else if (dst < -180)
-                return dst + 360;
-            else
-                return dst;
-        }
-
-        float ApproachAngle(float src, float dst, float absDelta)
-        {
-            dst = ModifyAngle(dst);
-            src = ModifyAngle(src);
-
-            if (dst - src < -Mathf.Epsilon)
-                return Mathf.Max(dst, src - absDelta);
-            else if (dst - src > Mathf.Epsilon)
-                return Mathf.Min(dst, src + absDelta);
-            else
-                return src;
-        }
-
-        // rotZ = ApproachAngle(rotZ, targetRotZ, Time.deltaTime * rotZScale);
         float rotY = oldRot.eulerAngles.y + deltaRotY;
-        if (Mathf.Abs(Mathf.DeltaAngle(rotZ, targetRotZ)) > Mathf.Epsilon)
+        if (Mathf.Abs(Mathf.DeltaAngle(rotZ, targetRotZ)) > 0.1f)
             rotZ = Mathf.LerpAngle(rotZ, targetRotZ, Time.deltaTime * rotZScale);
 
         logInfo = $"RotZ {rotZ}\n RotY {rotY}\n deltaRotY {deltaRotY}\n {local2TargetDir}";

@@ -12,12 +12,13 @@ public class Lumberer : MonoBehaviour, IEntity
     public float power = 5f;            // attack power
 
     private CharacterController cc;
-    private Animator animator;
+    public Animator animator;
     private NavMeshAgent agent;
     
-
     private bool isAlive = true;
-    public bool isAttacking { get; set; } = false;
+
+    public bool isAttacking = false;    // 目前弃用
+    public bool isHit = false;          // 命中，提供给 Axe.cs 使用
 
     public float health = 10f;
 
@@ -28,6 +29,28 @@ public class Lumberer : MonoBehaviour, IEntity
         agent = GetComponent<NavMeshAgent>();
     }
 
+    public void Update()
+    {
+        if (animator)
+        {
+            // Debug.Log($"agent.velocity = {agent.velocity}");
+            animator.SetFloat("velocity", agent.velocity.magnitude);
+            //
+            // BUG HERE!
+            // 
+
+            // 防止打空 && 防止行走的时候还在攻击（会平移）（bug: 仍无法防止多余的一次攻击）
+            if (GetComponent<LumbererManager>().closestTree && agent.velocity.magnitude == 0)
+            {
+                // 到达目的地时开始攻击
+                if (agent.destination == transform.position)
+                {
+                    animator.SetTrigger("attack");
+                }
+            }
+        }
+    }
+
     #region Navigation
 
     public void SetDestination(Vector3 target) {
@@ -35,9 +58,21 @@ public class Lumberer : MonoBehaviour, IEntity
         Debug.Assert(agent.SetDestination(target), "Set Destination Failed");
     }
 
+    // <param name="modDist">
+    //     最终目的地距离目标的距离，预留一个大于 0 的值可以防止<del>秦王</del>伐木人绕树
+    //     对目前的情况，`.3f` 是个比较合适的值。该值正常情况下由 LumbererManager 控制。
+    // </param>
+    public void SetDestination(Vector3 target, float modDist)
+    {
+        var dirToTarget = (target - transform.position).normalized;
+        var modTargetPos = target - dirToTarget * modDist;
+        Debug.Log($"Setted Destination: {modTargetPos}");
+        Debug.Assert(agent.SetDestination(modTargetPos), "Set Destination Failed");
+    }
+
     #endregion
 
-    #region Move
+    #region Move(deprecated)
 
     public void Walk(Vector3 velocity)
     {
@@ -75,7 +110,7 @@ public class Lumberer : MonoBehaviour, IEntity
 
     #endregion
 
-    #region Attack and HP
+    #region Attack(deprecated)
 
     public void Attack1()
     {
@@ -92,6 +127,10 @@ public class Lumberer : MonoBehaviour, IEntity
         this.isAttacking = true;
         // 对 isAttacking 状态的解除已由 Animator 的脚本托管
     }
+
+    #endregion
+
+    #region Life
 
     public void Death()
     {

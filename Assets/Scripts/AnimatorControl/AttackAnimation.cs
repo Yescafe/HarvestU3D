@@ -19,7 +19,18 @@ public class AttackAnimation : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        animator.GetComponent<Lumberer>().isAttacking = false;
+        var lumberer = animator.GetComponent<Lumberer>();
+        var lmgr = lumberer.GetComponent<LumbererManager>();
+        lumberer.isAttacking = false;
+        // 最近的树已经销毁 && 伐木人未在攻击（目前停用）
+        if (!lmgr.closestTree && !lumberer.isAttacking)
+        {
+            lmgr.closestTree = Trees.I.GetClosestTree(lumberer.transform.position);
+            // 这里的 modDist 参数由 LumbererManager 控制。
+            lumberer.SetDestination(lmgr.closestTree.transform.position, lmgr.minDist);
+        }
+        lumberer.isAttacking = false;
+        lumberer.isHit = false;        // 关闭命中，等待下一次攻击
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()

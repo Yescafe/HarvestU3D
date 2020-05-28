@@ -8,13 +8,20 @@ public class LumbererManager : DCLSingletonBase<LumbererManager>
     Lumberer lumberer;
     private KdTree<Lumberer> lumberers = new KdTree<Lumberer>();
 
+    // minDist 的说明见 Lumberer::SetDestination::modDist
+    public float minDist = .3f;
+
+    public Tree closestTree;
+
     void Start()
     {
         lumberer = GetComponent<Lumberer>();
         Debug.Assert(lumberer != null);
         Debug.Assert(Trees.I.GetClosestTree(lumberer.transform.position) != null, $"{Trees.I.trees.Count}");
-        lumberer.SetDestination(Trees.I.GetClosestTree(lumberer.transform.position).transform.position);
+        closestTree = Trees.I.GetClosestTree(lumberer.transform.position);
+        lumberer.SetDestination(closestTree.transform.position, minDist);
     }
+
 
 #if USER_CONTROL
     void Update()
@@ -43,16 +50,4 @@ public class LumbererManager : DCLSingletonBase<LumbererManager>
     }
 #endif
 
-    private void OnTriggerEnter(Collider other)
-    {
-        Debug.Log("OnTriggerEnter");
-        if (lumberer.isAttacking && other.gameObject.CompareTag("Tree"))
-        {
-            Debug.Log("OnTriggerEnter Ran");
-            var damage = lumberer.power - other.gameObject.GetComponent<Tree>().defense;
-            damage = damage < 0f ? 0f : damage;
-            Debug.Log("Get Damage: " + damage);
-            other.gameObject.GetComponent<Tree>().TakeDamage(damage, other.gameObject);
-        }
-    }
 }

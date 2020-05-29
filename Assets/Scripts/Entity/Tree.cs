@@ -29,6 +29,7 @@ public class Tree : MonoBehaviour, IEntity
     
     public void TrueDie()
     {
+        // Trees.I.RemoveTree(this);
         //
         // WARN HERE
         //

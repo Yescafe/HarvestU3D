@@ -22,11 +22,14 @@ public class Lumberer : MonoBehaviour, IEntity
 
     public float health = 10f;
 
+    [NonSerialized] public Tree closestTree;
+
     public void Start()
     {
         cc = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
+        Debug.Assert(agent != null);
     }
 
     public void Update()
@@ -40,7 +43,7 @@ public class Lumberer : MonoBehaviour, IEntity
             // 
 
             // 防止打空 && 防止行走的时候还在攻击（会平移）（bug: 仍无法防止多余的一次攻击）
-            if (GetComponent<LumbererManager>().closestTree && agent.velocity.magnitude == 0)
+            if (closestTree && agent.velocity.magnitude == 0)
             {
                 // 到达目的地时开始攻击
                 if (agent.destination == transform.position)
@@ -55,19 +58,29 @@ public class Lumberer : MonoBehaviour, IEntity
 
     public void SetDestination(Vector3 target) {
         Debug.Log($"Setted Destination: {target}");
+        Debug.Assert(agent != null);
         Debug.Assert(agent.SetDestination(target), "Set Destination Failed");
     }
 
-    // <param name="modDist">
-    //     最终目的地距离目标的距离，预留一个大于 0 的值可以防止<del>秦王</del>伐木人绕树
-    //     对目前的情况，`.3f` 是个比较合适的值。该值正常情况下由 LumbererManager 控制。
-    // </param>
+    /// <param name="modDist">
+    ///     最终目的地距离目标的距离，预留一个大于 0 的值可以防止<del>秦王</del>伐木人绕树
+    ///     对目前的情况，`.3f` 是个比较合适的值。该值正常情况下由 LumbererManager 控制。
+    /// </param>
     public void SetDestination(Vector3 target, float modDist)
     {
         var dirToTarget = (target - transform.position).normalized;
         var modTargetPos = target - dirToTarget * modDist;
         Debug.Log($"Setted Destination: {modTargetPos}");
+        if (agent == null)
+            agent = GetComponent<NavMeshAgent>();            
+        Debug.Assert(agent != null);
         Debug.Assert(agent.SetDestination(modTargetPos), "Set Destination Failed");
+    }
+
+    public void SetTargetTree(Tree target, float modDist)
+    {
+        closestTree = target;
+        SetDestination(target.transform.position, modDist);
     }
 
     #endregion

@@ -14,7 +14,7 @@ public class AirWalls : DCLSingletonBase<AirWalls>
 	public void Generate()
     {
         Helper.ClearAllChild(transform);
-        var sideWidth = Trees.I.sideWidth;
+        var sideWidth = Trees.I.radius;
         // var sideWidth = 15f;
 
         // Set air walls (4-direction)

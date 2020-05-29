@@ -10,22 +10,45 @@ public class Trees : DCLSingletonBase<Trees>
     /// 包含 碰撞体 和 Tree 脚本的模板
     /// </summary>
     public GameObject treeTemplate;
-    public float sideWidth = 10f;
+    public float radius = 10f;
     public int treeNumberToGen;
 
     // TODO 修改成 private
     public KdTree<Tree> trees = new KdTree<Tree>();
+    // TODO 被伐木人瞄准了的树木，在这里的所有树，会在 GetClosestTree 的查找内容中忽略
+    private HashSet<Tree> aimedTrees = new HashSet<Tree>();
 
     // TODO 如何序列化这玩意，以便在 Inspector 进行修改
-    public UnityAction generator;
+    public GenerateType generator;
+
+    public enum GenerateType
+    {
+        Circle,
+        GuassianSquare,
+    }
+
+    Dictionary<GenerateType, Action> generators;
 
     void Awake()
     {
-        generator = CircleGenerate;
+        generators = new Dictionary<GenerateType, Action>()
+    {
+        {GenerateType.Circle, CircleGenerate},
+        {GenerateType.GuassianSquare, GuassianGenerate}
+    };
         GenerateTrees();
     }
 
     public Tree GetClosestTree(Vector3 pos) => trees.FindClosest(pos);
+
+    public void RegisterTree(Tree tree)
+    {
+    }
+
+    public void RemoveTree(Tree tree)
+    {
+
+    }
 
     #region Generation
 
@@ -38,21 +61,25 @@ public class Trees : DCLSingletonBase<Trees>
         trees.Clear();
         for (int i = 0; i < treeNumberToGen; i++)
         {
-            // generator?.Invoke();
-            GuassianGenerate();
+            generators[generator]?.Invoke();
+            // GuassianGenerate();
         }
     }
 
+    /// <summary>
+    /// 平均分布，随机取一个圆的面积，然后通过这个面积来获得到半径值，这样的 随机半径值 和 随机角度 的结合，满足平均分布
+    /// https://medium.com/@dreamume/leetcode-478-generate-random-point-in-a-circle-efc5590c5065
+    /// https://stackoverflow.com/a/50746409/9337675
+    /// </summary>
     void CircleGenerate()
     {
         var ranIdx = (int)UnityEngine.Random.Range(0f, treeCategory.Count);
 
-        // Generate in a circle
-        var ranH = UnityEngine.Random.Range(-sideWidth / 2, sideWidth / 2);
-        // var ranV = Random.Range(-sideWidth / 2, sideWidth / 2);
-        var ranUnit = UnityEngine.Random.Range(-1f, 1f);
-        var ranV = (float)(ranUnit * Math.Sqrt(Math.Pow(sideWidth / 2, 2) - Math.Pow(Math.Abs(ranH), 2)));
-
+        var ranArea = UnityEngine.Random.Range(0f, radius * radius);
+        var ranRadius = Mathf.Sqrt(ranArea);
+        var ranAngle = UnityEngine.Random.Range(0f, 360f);
+        var ranH = ranRadius * Mathf.Sin(ranAngle);
+        var ranV = ranRadius * Mathf.Cos(ranAngle);
 
         CreateTree(treeCategory[ranIdx], new Vector3(ranH, .45f, ranV));
     }
@@ -62,8 +89,8 @@ public class Trees : DCLSingletonBase<Trees>
         var ranIdx = (int)UnityEngine.Random.Range(0f, treeCategory.Count);
 
         // Generate trees with Gaussian distribution
-        var ranH = NextGaussian(0f, 1 / 2f, -1f, 1f) * sideWidth / 2;
-        var ranV = NextGaussian(0f, 1 / 2f, -1f, 1f) * sideWidth / 2;
+        var ranH = NextGaussian(0f, 1 / 2f, -1f, 1f) * radius / 2;
+        var ranV = NextGaussian(0f, 1 / 2f, -1f, 1f) * radius / 2;
 
         var ranScale = UnityEngine.Random.Range(.9f, 1.1f);
         Debug.Log("ranIdx = " + ranIdx + " ranH = " + ranH + " ranV = " + ranV + " ranScale = " + ranScale);

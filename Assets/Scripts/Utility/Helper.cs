@@ -14,4 +14,16 @@ static public class Helper
     {
         TraverseChild(parent, (trans) => GameObject.DestroyImmediate(trans.gameObject));
     }
+
+    /// <summary>
+    /// 以一个平行于 xz 平面的圆，获得在其周边上的随机点
+    /// </summary>
+    /// <param name="origin"></param>
+    /// <param name="radius"></param>
+    public static Vector3 RandomOnCircle(Vector3 origin, float radius)
+    {
+        Debug.Assert(radius > 0f);
+        var angle = UnityEngine.Random.Range(0, 360f);
+        return origin + radius * new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle));
+    }
 }

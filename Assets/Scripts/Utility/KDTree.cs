@@ -107,6 +107,8 @@ public class KdTree<T> : IEnumerable<T>, IEnumerable where T : Component
             _add(node);
     }
 
+    public void Remove(T t) => RemoveAll((param) => param == t);
+
     /// <summary>
     /// remove all objects that matches the given predicate
     /// </summary>

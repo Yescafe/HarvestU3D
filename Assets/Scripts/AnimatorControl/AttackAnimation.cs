@@ -20,14 +20,11 @@ public class AttackAnimation : StateMachineBehaviour
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         var lumberer = animator.GetComponent<Lumberer>();
-        var lmgr = lumberer.GetComponent<LumbererManager>();
         lumberer.isAttacking = false;
         // 最近的树已经销毁 && 伐木人未在攻击（目前停用）
-        if (!lmgr.closestTree && !lumberer.isAttacking)
+        if (!lumberer.closestTree && !lumberer.isAttacking)
         {
-            lmgr.closestTree = Trees.I.GetClosestTree(lumberer.transform.position);
-            // 这里的 modDist 参数由 LumbererManager 控制。
-            lumberer.SetDestination(lmgr.closestTree.transform.position, lmgr.minDist);
+            LumbererManager.I.SetTargetTree4Lumberer(lumberer);
         }
         lumberer.isAttacking = false;
         lumberer.isHit = false;        // 关闭命中，等待下一次攻击

@@ -5,23 +5,52 @@ using UnityEngine.Rendering;
 
 public class LumbererManager : DCLSingletonBase<LumbererManager>
 {
+    public GameObject lumbererPrefab;
+
+    public float lumbererHeight = 0.45f;
     Lumberer lumberer;
-    private KdTree<Lumberer> lumberers = new KdTree<Lumberer>();
+    public int lumbererSpawnCount;
 
     // minDist 的说明见 Lumberer::SetDestination::modDist
     public float minDist = .3f;
+    public float distToOuterTree;
+    public int spawnCount = 1;
+    public float spawnCD = 1f;
 
-    public Tree closestTree;
+    private KdTree<Lumberer> lumberers = new KdTree<Lumberer>();
 
     void Start()
     {
-        lumberer = GetComponent<Lumberer>();
-        Debug.Assert(lumberer != null);
-        Debug.Assert(Trees.I.GetClosestTree(lumberer.transform.position) != null, $"{Trees.I.trees.Count}");
-        closestTree = Trees.I.GetClosestTree(lumberer.transform.position);
-        lumberer.SetDestination(closestTree.transform.position, minDist);
+        StartCoroutine(Spawn());
     }
 
+    IEnumerator Spawn()
+    {
+        var spawnRadius = distToOuterTree + Trees.I.radius;
+        while (lumberers.Count < spawnCount)
+        {
+            var lumb = CreateLumberer(Helper.RandomOnCircle(Vector3.up * lumbererHeight, spawnRadius));
+            SetTargetTree4Lumberer(lumb);
+            yield return new WaitForSeconds(spawnCD);
+        }
+        yield return null;
+    }
+
+    Lumberer CreateLumberer(Vector3 pos)
+    {
+        var go = Instantiate(lumbererPrefab, pos, Quaternion.identity, transform);
+        var lumb = go.GetComponent<Lumberer>();
+        lumberers.Add(lumb);
+        Debug.Log($"Created Lumberer at {pos}");
+        return lumb;
+    }
+
+    public void SetTargetTree4Lumberer(Lumberer lumberer)
+    {
+        Tree closestTree = Trees.I.GetClosestTree(lumberer.transform.position);
+        if (closestTree != null)
+            lumberer.SetTargetTree(closestTree, minDist);
+    }
 
 #if USER_CONTROL
     void Update()

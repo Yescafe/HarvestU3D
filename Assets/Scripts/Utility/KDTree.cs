@@ -368,6 +368,10 @@ public class KdTree<T> : IEnumerable<T>, IEnumerable where T : Component
             }
         }
 
+        if (nearest == null)
+        {
+            return null;
+        }
         AverageSearchLength = (99f * AverageSearchLength + openCur) / 100f;
         AverageSearchDeep = (99f * AverageSearchDeep + nearest.level) / 100f;
 

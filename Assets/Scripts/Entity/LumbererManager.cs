@@ -59,7 +59,10 @@ public class LumbererManager : DCLSingletonBase<LumbererManager>
     {
         Tree closestTree = Trees.I.GetClosestTree(lumberer.transform.position);
         if (closestTree != null)
+        {
             lumberer.SetTargetTree(closestTree, minDist);
+            Trees.I.RemoveTree(closestTree);      // 将已经被占用的树从 KDTree 队列中删除
+        }
     }
 
     public Lumberer GetClosest(Vector3 pos) => lumberers.FindClosest(pos);

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -37,16 +38,8 @@ public class Tree : MonoBehaviour, IEntity
         // 删除的对象的引用。这里采用遍历的方法，复杂度有点高。但是如果没办法也无大碍。
         //
         // Find 方法在本操作中并无实际作用。
-        KdTree<Tree> trees = GetComponentInParent<Trees>().trees;
-        for (int idx = 0; idx != trees.Count; idx++)
-        {
-            if (trees[idx] == this)
-            {
-                trees.RemoveAt(idx);
-                break;
-            }
-        }
-    
+
+        Trees.I.RemoveTree(this);
         Destroy(gameObject);
     }
 }

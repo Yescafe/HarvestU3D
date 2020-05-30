@@ -2379,7 +2379,7 @@ Transform:
   m_GameObject: {fileID: 5911368376623988655}
   m_LocalRotation: {x: 0.6170358, y: 0, z: 0, w: 0.7869351}
   m_LocalPosition: {x: 0.356, y: 0.049, z: 0.408}
-  m_LocalScale: {x: 0.03, y: 0.7, z: 0.03}
+  m_LocalScale: {x: 0.03, y: 1, z: 0.03}
   m_Children: []
   m_Father: {fileID: 5663971662555029925}
   m_RootOrder: 1
@@ -2561,12 +2561,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0142771c156ac854cb48b895742b0242, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2
+  speed: 1
   turnSpeed: 5
   power: 5
-  animator: {fileID: 0}
-  isAttacking: 0
-  isHit: 0
   health: 10
 --- !u!195 &635406493
 NavMeshAgent:
@@ -2578,7 +2575,7 @@ NavMeshAgent:
   m_Enabled: 0
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 2
+  m_Speed: 3
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120

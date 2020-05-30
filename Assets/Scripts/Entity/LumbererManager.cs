@@ -51,7 +51,7 @@ public class LumbererManager : DCLSingletonBase<LumbererManager>
         if (closestTree != null)
         {
             lumberer.SetTargetTree(closestTree, minDist);
-            closestTree.locked = true;
+            Trees.I.RemoveTree(closestTree);      // 将已经被占用的树从 KDTree 队列中删除
         }
     }
 

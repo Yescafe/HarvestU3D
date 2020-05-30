@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JetBrains.Annotations;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,13 +13,14 @@ public class Lumberer : MonoBehaviour, IEntity
     public float power = 5f;            // attack power
 
     private CharacterController cc;
-    public Animator animator;
+    [NonSerialized] public Animator animator;
     private NavMeshAgent agent;
     
     private bool isAlive = true;
 
-    public bool isAttacking = false;    // 目前弃用
-    public bool isHit = false;          // 命中，提供给 Axe.cs 使用
+    [NonSerialized] public bool isAttacking = false;    // 目前弃用
+    [NonSerialized] public bool isAttackTriggering = false;
+    [NonSerialized] public bool isHit = false;          // 命中，提供给 Axe.cs 使用
 
     public float health = 10f;
 
@@ -34,23 +36,34 @@ public class Lumberer : MonoBehaviour, IEntity
 
     public void Update()
     {
-        if (animator)
+        // 攻击动画的优先级高于一切动作（发生碰撞除外，见Lumberer::OnTriggerEnter）
+        if (!isAttackTriggering && animator)
         {
-            // Debug.Log($"agent.velocity = {agent.velocity}");
-            animator.SetFloat("velocity", agent.velocity.magnitude);
-            //
-            // BUG HERE!
-            // 
-
-            // 防止打空 && 防止行走的时候还在攻击（会平移）（bug: 仍无法防止多余的一次攻击）
-            if (closestTree && agent.velocity.magnitude == 0)
+            // 攻击移动二选一
+            if (closestTree != null && agent.destination == transform.position)
             {
-                // 到达目的地时开始攻击
-                if (agent.destination == transform.position)
-                {
-                    animator.SetTrigger("attack");
-                }
+                animator.SetFloat("velocity", 0f);     // 在攻击时强制停止移动动作
+                animator.SetTrigger("attack");
+                isAttackTriggering = true;        // Trigger 启动标志
             }
+            else
+            {
+                animator.SetFloat("velocity", agent.velocity.magnitude);
+            }
+        }
+    }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        // 防止伐木人之间互相卡位，完成随机位移
+        // 因为碰撞是相互的，所以只对触发方进行实现，但实际上两个对象都会发生位移
+        const float limitRange = .15f;    // [-.15f, .15f]
+        if (other.gameObject.CompareTag("Lumberer"))
+        {
+            var randomVelocity = new Vector3(UnityEngine.Random.Range(-limitRange, limitRange),
+                                             UnityEngine.Random.Range(-limitRange, limitRange),
+                                             UnityEngine.Random.Range(-limitRange, limitRange));
+            cc.SimpleMove(randomVelocity);
         }
     }
 
@@ -80,7 +93,10 @@ public class Lumberer : MonoBehaviour, IEntity
     public void SetTargetTree(Tree target, float modDist)
     {
         closestTree = target;
-        SetDestination(target.transform.position, modDist);
+        if (target != null)
+            SetDestination(target.transform.position, modDist);
+        else
+            Debug.Log("There is no more trees in the map. Lumberer won.");
     }
 
     #endregion
@@ -181,6 +197,6 @@ public class Lumberer : MonoBehaviour, IEntity
     {
 
     }
-    
+
     #endregion
 }

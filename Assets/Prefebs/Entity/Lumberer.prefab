@@ -2578,9 +2578,6 @@ MonoBehaviour:
   speed: 1
   turnSpeed: 5
   power: 5
-  animator: {fileID: 0}
-  isAttacking: 0
-  isHit: 0
   health: 10
 --- !u!195 &635406493
 NavMeshAgent:

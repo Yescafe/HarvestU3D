@@ -343,7 +343,7 @@ public class KdTree<T> : IEnumerable<T>, IEnumerable where T : Component
                 traversed.Add(current.component);
 
             var nodeDist = _distance(position, current.component.transform.position);
-            if (nodeDist < nearestDist && !current.component.GetComponent<Tree>().locked)
+            if (nodeDist < nearestDist)
             {
                 nearestDist = nodeDist;
                 nearest = current;
@@ -368,6 +368,10 @@ public class KdTree<T> : IEnumerable<T>, IEnumerable where T : Component
             }
         }
 
+        if (nearest == null)
+        {
+            return null;
+        }
         AverageSearchLength = (99f * AverageSearchLength + openCur) / 100f;
         AverageSearchDeep = (99f * AverageSearchDeep + nearest.level) / 100f;
 

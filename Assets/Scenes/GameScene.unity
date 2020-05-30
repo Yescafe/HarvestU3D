@@ -352,7 +352,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1 &963194225
 GameObject:
@@ -431,12 +431,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.21683349, y: 0.07958462, z: -0.017738275, w: 0.9727975}
-  m_LocalPosition: {x: 0.41955578, y: 2.4923675, z: -1.417723}
+  m_LocalRotation: {x: 0.508408, y: 0.011623069, z: -0.0068631875, w: 0.8610105}
+  m_LocalPosition: {x: -1.1902692, y: 16.430582, z: -10.21885}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
 --- !u!114 &963194229
 MonoBehaviour:
@@ -489,8 +489,8 @@ MonoBehaviour:
   lumbererSpawnCount: 10
   minDist: 0.3
   distToOuterTree: 4
-  spawnCount: 20
-  spawnCD: 0.2
+  spawnCount: 2
+  spawnCD: 0.1
 --- !u!4 &1091582866
 Transform:
   m_ObjectHideFlags: 0
@@ -503,7 +503,51 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1597032263
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1597032265}
+  - component: {fileID: 1597032264}
+  m_Layer: 0
+  m_Name: Main Game Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1597032264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1597032263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04d0d75de5839c14ab757e130b4047ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dispInfo: {fileID: 0}
+--- !u!4 &1597032265
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1597032263}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1686660991
 GameObject:
@@ -542,7 +586,7 @@ MonoBehaviour:
   treeTemplate: {fileID: 4633143647473668587, guid: 8923967a67f72334ca1eb70327108f60,
     type: 3}
   radius: 10
-  treeNumberToGen: 100
+  treeNumberToGen: 50
   generator: 0
 --- !u!4 &1686660993
 Transform:
@@ -627,5 +671,5 @@ Transform:
   - {fileID: 252838159}
   - {fileID: 1686660993}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

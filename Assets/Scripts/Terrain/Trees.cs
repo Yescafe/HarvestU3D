@@ -13,10 +13,12 @@ public class Trees : DCLSingletonBase<Trees>
     public float radius = 10f;
     public int treeNumberToGen;
 
-    // TODO 修改成 private
+    // TODO[-] 修改成 private
+    // 将“trees 队列”的意义定义为“等待被预约的 tree 队列”
     public KdTree<Tree> trees = new KdTree<Tree>();
-    // TODO 被伐木人瞄准了的树木，在这里的所有树，会在 GetClosestTree 的查找内容中忽略
-    private HashSet<Tree> aimedTrees = new HashSet<Tree>();
+    // TODO[x] 被伐木人瞄准了的树木，在这里的所有树，会在 GetClosestTree 的查找内容中忽略
+    // 该内容以全权转接给 this.trees 实现，无须重复实现 (LumbererManager.cs:54)
+    // private HashSet<Tree> aimedTrees = new HashSet<Tree>();
 
     // TODO 如何序列化这玩意，以便在 Inspector 进行修改
     public GenerateType generator;
@@ -45,9 +47,19 @@ public class Trees : DCLSingletonBase<Trees>
     {
     }
 
-    public void RemoveTree(Tree tree)
+    public bool RemoveTree(Tree tree)
     {
-
+        bool ret = true;
+        for (int idx = 0; idx != trees.Count; idx++)
+        {
+            if (trees[idx] == tree)
+            {
+                trees.RemoveAt(idx);
+                ret = false;
+                break;
+            }
+        }
+        return ret;
     }
 
     #region Generation

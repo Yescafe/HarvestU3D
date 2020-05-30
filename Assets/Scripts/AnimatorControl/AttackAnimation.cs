@@ -20,14 +20,20 @@ public class AttackAnimation : StateMachineBehaviour
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         var lumberer = animator.GetComponent<Lumberer>();
-        lumberer.isAttacking = false;
-        // 最近的树已经销毁 && 伐木人未在攻击（目前停用）
-        if (!lumberer.closestTree && !lumberer.isAttacking)
+        var lumbererManager = LumbererManager.I;
+        bool hasSet = false;
+        if (lumberer.closestTree == null && lumberer.isHit)
         {
-            LumbererManager.I.SetTargetTree4Lumberer(lumberer);
+            lumbererManager.SetTargetTree4Lumberer(lumberer);
+            hasSet = true;
         }
-        lumberer.isAttacking = false;
-        lumberer.isHit = false;        // 关闭命中，等待下一次攻击
+
+        if (lumberer.isHit == true)        // 如果有攻击动画，则定需要攻击命中
+            lumberer.isHit = false;        // 关闭命中，等待下一次攻击
+        else if (!hasSet)                  // 有攻击动画没有击中的情况，修复空挥
+            LumbererManager.I.SetTargetTree4Lumberer(lumberer);
+
+        lumberer.isAttackTriggering = false;     // 取消攻击触发置位
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()

@@ -24,13 +24,14 @@ public class BirdManager : DCLSingletonBase<BirdManager>
             bool selectAction = false;
             if (Physics.Raycast(ray, out raycastHit, 50f, LayerMask.GetMask("Bird", "Tree", "Lumberer")))
             {
+                Debug.Log($"Hit a object {raycastHit.transform.name}");
                 var hitCol = raycastHit.collider;
                 switch (hitCol.tag)
                 {
                     case "Bird":
                         {
                             Debug.Log($"Selected a bird, {hitCol.name}");
-                            SelectBird(hitCol.gameObject);
+                            DoSelectBird(hitCol.gameObject);
                             selectAction = true;
                             break;
                         }
@@ -54,6 +55,19 @@ public class BirdManager : DCLSingletonBase<BirdManager>
             }
         }
 
+    }
+
+    void DoSelectBird(GameObject go)
+    {
+        var bird = go.GetComponent<Bird>();
+        if (selectedBirds.Contains(bird))
+        {
+            UnSelectBird(bird);
+        }
+        else
+        {
+            SelectBird(bird);
+        }
     }
 
     void SelectBird(GameObject go)

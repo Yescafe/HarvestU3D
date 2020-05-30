@@ -22,6 +22,8 @@ public class Lumberer : MonoBehaviour, IEntity
 
     public float health = 10f;
 
+    public bool IsDead => !isAlive;
+
     [NonSerialized] public Tree closestTree;
 
     public void Start()
@@ -53,6 +55,7 @@ public class Lumberer : MonoBehaviour, IEntity
             }
         }
     }
+
 
     #region Navigation
 

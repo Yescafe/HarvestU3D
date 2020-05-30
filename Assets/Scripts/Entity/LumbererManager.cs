@@ -21,7 +21,17 @@ public class LumbererManager : DCLSingletonBase<LumbererManager>
 
     void Start()
     {
+        ArrangeChild();
         StartCoroutine(Spawn());
+    }
+
+    void ArrangeChild()
+    {
+        var tmps = transform.GetComponentsInChildren<Lumberer>();
+        foreach (var lumb in tmps)
+        {
+            lumberers.Add(lumb);
+        }
     }
 
     IEnumerator Spawn()
@@ -52,6 +62,7 @@ public class LumbererManager : DCLSingletonBase<LumbererManager>
             lumberer.SetTargetTree(closestTree, minDist);
     }
 
+    public Lumberer GetClosest(Vector3 pos) => lumberers.FindClosest(pos);
 #if USER_CONTROL
     void Update()
     {

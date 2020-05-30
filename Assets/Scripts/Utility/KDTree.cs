@@ -343,7 +343,7 @@ public class KdTree<T> : IEnumerable<T>, IEnumerable where T : Component
                 traversed.Add(current.component);
 
             var nodeDist = _distance(position, current.component.transform.position);
-            if (nodeDist < nearestDist)
+            if (nodeDist < nearestDist && !current.component.GetComponent<Tree>().locked)
             {
                 nearestDist = nodeDist;
                 nearest = current;

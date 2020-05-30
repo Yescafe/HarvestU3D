@@ -489,8 +489,8 @@ MonoBehaviour:
   lumbererSpawnCount: 10
   minDist: 0.3
   distToOuterTree: 4
-  spawnCount: 10
-  spawnCD: 1
+  spawnCount: 20
+  spawnCD: 0.2
 --- !u!4 &1091582866
 Transform:
   m_ObjectHideFlags: 0

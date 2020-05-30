@@ -49,7 +49,10 @@ public class LumbererManager : DCLSingletonBase<LumbererManager>
     {
         Tree closestTree = Trees.I.GetClosestTree(lumberer.transform.position);
         if (closestTree != null)
+        {
             lumberer.SetTargetTree(closestTree, minDist);
+            closestTree.locked = true;
+        }
     }
 
 #if USER_CONTROL

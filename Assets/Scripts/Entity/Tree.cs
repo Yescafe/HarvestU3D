@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,6 +7,8 @@ public class Tree : MonoBehaviour, IEntity
 {
     public float health = 10f;
     public float defense = 0f;
+
+    [NonSerialized] public bool locked = false;
 
     public void TakeDamage(float damage, GameObject attaker)
     {

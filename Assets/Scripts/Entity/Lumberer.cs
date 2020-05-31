@@ -65,7 +65,7 @@ public class Lumberer : MonoBehaviour, IEntity
             var randomVelocity = new Vector3(UnityEngine.Random.Range(-limitRange, limitRange),
                                              UnityEngine.Random.Range(-limitRange, limitRange),
                                              UnityEngine.Random.Range(-limitRange, limitRange));
-            cc.SimpleMove(randomVelocity);
+            // cc.SimpleMove(randomVelocity);
         }
     }
 

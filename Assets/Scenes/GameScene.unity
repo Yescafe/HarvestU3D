@@ -541,8 +541,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.508408, y: 0.011623069, z: -0.0068631875, w: 0.8610105}
-  m_LocalPosition: {x: -1.1902692, y: 16.430582, z: -10.21885}
+  m_LocalRotation: {x: 0.7071066, y: 0.000000016763806, z: -0.0000000088475645, w: 0.707107}
+  m_LocalPosition: {x: -0.000000011872496, y: 20.56049, z: 0.00000280619}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children: []
   m_Father: {fileID: 0}
@@ -662,11 +662,11 @@ MonoBehaviour:
   lumbererPrefab: {fileID: 8262999416294638914, guid: cbeb4032aa64adf4e8afd52d4cdb223b,
     type: 3}
   lumbererHeight: 0.5
-  lumbererSpawnCount: 10
   minDist: 0.3
   distToOuterTree: 4
-  spawnCount: 2
+  spawnCount: 10
   spawnCD: 0.1
+  navMeshAgentSpeed: 1
 --- !u!4 &1091582866
 Transform:
   m_ObjectHideFlags: 0

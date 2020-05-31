@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.AI;
 
 public class LumbererManager : EntityManager<Lumberer, LumbererManager>
 {
@@ -13,6 +14,7 @@ public class LumbererManager : EntityManager<Lumberer, LumbererManager>
     public float distToOuterTree;
     public int spawnCount = 1;
     public float spawnCD = 1f;
+    public float navMeshAgentSpeed = 1f;
 
     void Start()
     {

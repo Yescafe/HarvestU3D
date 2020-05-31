@@ -9,7 +9,6 @@ public class LumbererManager : DCLSingletonBase<LumbererManager>
 
     public float lumbererHeight = 0.45f;
     Lumberer lumberer;
-    public int lumbererSpawnCount;
 
     // minDist 的说明见 Lumberer::SetDestination::modDist
     public float minDist = .3f;

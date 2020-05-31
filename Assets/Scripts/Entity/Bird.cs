@@ -13,6 +13,7 @@ public class Bird : MonoBehaviour, IEntity
     public float watchDist = 5f;
     public float attackDist = 1f;
     public int atk = 2;
+    public float atkRange = 1f;
 
     public float moveVel = 10f;
     public float moveBackVel = -10f;
@@ -104,6 +105,8 @@ public class Bird : MonoBehaviour, IEntity
         float deltaRotY = 0f;
         float targetRotZ = 0f;
         float targetRotX = 0f;
+
+        // 侧旋转（y轴 影响移动方向，z轴 展示倾斜效果）
         float dist = Vector3.Distance(target, transform.position);
         if (local2TargetDir.x > 0.1f)
         {
@@ -143,6 +146,8 @@ public class Bird : MonoBehaviour, IEntity
             target = tree.transform.position;
             curState = Aim2Target;
         }
+        
+        // 直接锁定目标
         transform.rotation = Quaternion.LookRotation(target - transform.position);
         var deltaPos = target - transform.position;
         var distance = deltaPos.magnitude;
@@ -151,7 +156,7 @@ public class Bird : MonoBehaviour, IEntity
 
         ScreenLogger.I.AddLine($"target {target}, deltaPos {deltaPos}, distance {distance}");
 
-        if (distance < 1f)
+        if (distance < atkRange)
         {
             Helper.Log($"attack");
             toChase.TakeDamage(atk, gameObject);
@@ -183,6 +188,7 @@ public class Bird : MonoBehaviour, IEntity
     {
 
     }
+    
     void OnTriggerEnter(Collider collider)
     {
         if (!Chasing && collider.CompareTag("Lumberer"))

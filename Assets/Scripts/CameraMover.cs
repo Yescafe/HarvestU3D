@@ -10,7 +10,7 @@ public class CameraMover : MonoBehaviour
     [SerializeField] int minSize, maxSize;
     [SerializeField] float mouseMoveSpeed = 0.5f;
     [SerializeField] bool enableMouseZoom = false;
-    
+
     private Camera camera;
 
     void Start()
@@ -24,7 +24,7 @@ public class CameraMover : MonoBehaviour
         // 在鼠标右键按下并拖拽的时候，模拟相机的拉取移动
         if (Input.GetMouseButton(1))
         {
-            camera.transform.position -= new Vector3(Input.GetAxis("Mouse X"), 0f, Input.GetAxis("Mouse Y"));
+            camera.transform.position -= new Vector3(Input.GetAxis("Mouse X"), 0f, Input.GetAxis("Mouse Y")) * mouseMoveSpeed;
         }
 
         if (enableMouseZoom)

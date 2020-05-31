@@ -150,8 +150,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33a4e60805256ad46884654963de22f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  entityPrefab: {fileID: 4210308559069778189, guid: db7d7f8b39cb07d48b4aea1ca2e3591b,
+    type: 3}
   selectedMaterial: {fileID: 2100000, guid: 25ce5341c69a8cd4b8f4171836cbde22, type: 2}
   unSelectedMaterial: {fileID: 2100000, guid: 7c69f24682b857c4b8d31011c09d8cd2, type: 2}
+  spawnCount: 10
+  spawnHeight: 2
 --- !u!4 &401876
 Transform:
   m_ObjectHideFlags: 0
@@ -487,13 +491,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 999d8458897da4f43a2f67aba102f451, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lumbererPrefab: {fileID: 0}
+  entityPrefab: {fileID: 0}
   lumbererHeight: 0.45
-  lumbererSpawnCount: 0
   minDist: 0.3
   distToOuterTree: 0
   spawnCount: 0
   spawnCD: 1
+  navMeshAgentSpeed: 1
 --- !u!4 &1047902329
 Transform:
   m_ObjectHideFlags: 0

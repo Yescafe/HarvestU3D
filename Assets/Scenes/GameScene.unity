@@ -462,7 +462,7 @@ Transform:
   - {fileID: 1783624667}
   - {fileID: 976774434}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &963194225
 GameObject:
@@ -517,7 +517,7 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
-  orthographic: 0
+  orthographic: 1
   orthographic size: 5
   m_Depth: -1
   m_CullingMask:
@@ -542,7 +542,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0.7071066, y: 0.000000016763806, z: -0.0000000088475645, w: 0.707107}
-  m_LocalPosition: {x: -0.000000011872496, y: 20.56049, z: 0.00000280619}
+  m_LocalPosition: {x: 0, y: 10, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children: []
   m_Father: {fileID: 0}
@@ -555,15 +555,15 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f429f1bb00f1f9647bcfa646163cf5f2, type: 3}
+  m_Script: {fileID: 11500000, guid: f85b7c071ce1ed048b4dceaabe4e6514, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  trackee: {fileID: 0}
-  height: 7
-  distance: 6
-  deltaScale: 0.2
+  minSize: 0
+  maxSize: 10
+  mouseMoveSpeed: 0.5
+  enableMouseZoom: 0
 --- !u!1 &976774431
 GameObject:
   m_ObjectHideFlags: 0
@@ -659,7 +659,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 999d8458897da4f43a2f67aba102f451, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lumbererPrefab: {fileID: 8262999416294638914, guid: cbeb4032aa64adf4e8afd52d4cdb223b,
+  entityPrefab: {fileID: 8262999416294638914, guid: cbeb4032aa64adf4e8afd52d4cdb223b,
     type: 3}
   lumbererHeight: 0.5
   minDist: 0.3
@@ -674,6 +674,55 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1091582864}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1239273024
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1239273026}
+  - component: {fileID: 1239273025}
+  m_Layer: 0
+  m_Name: BirdManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1239273025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1239273024}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33a4e60805256ad46884654963de22f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  entityPrefab: {fileID: 4210308559069778189, guid: db7d7f8b39cb07d48b4aea1ca2e3591b,
+    type: 3}
+  selectedMaterial: {fileID: 2100000, guid: 25ce5341c69a8cd4b8f4171836cbde22, type: 2}
+  unSelectedMaterial: {fileID: 2100000, guid: 7c69f24682b857c4b8d31011c09d8cd2, type: 2}
+  spawnCount: 10
+  spawnHeight: 2
+--- !u!4 &1239273026
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1239273024}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -946,5 +995,5 @@ Transform:
   - {fileID: 252838159}
   - {fileID: 1686660993}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

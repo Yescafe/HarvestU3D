@@ -112,7 +112,8 @@ MonoBehaviour:
   rotXScale: 10
   watchDist: 5
   attackDist: 3
-  atk: 2
+  atk: 5
   atkRange: 0.2
+  atkCD: 1
   moveVel: 10
   moveBackVel: -5

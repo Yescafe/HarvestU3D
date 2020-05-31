@@ -27,8 +27,7 @@ public class Axe : MonoBehaviour
         // 只有在攻击动画中触发才算作命中 && 本次攻击动画中未曾命中 && 比较标签
         if (lumberer.isAttackTriggering && !lumberer.isHit && other.gameObject.CompareTag("Tree"))
         {
-            var otherDefense = other.gameObject.GetComponent<Tree>().defense;
-            other.gameObject.GetComponent<Tree>().TakeDamage(power - otherDefense, gameObject);
+            other.gameObject.GetComponent<Tree>().TakeDamage(power, gameObject);
             lumberer.isHit = true;
             // Debug.Log($"TakeDamage({power - otherDefense}) on `{other.gameObject.name}`, this attack has been hit.");
         }

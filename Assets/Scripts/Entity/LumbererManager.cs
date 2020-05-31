@@ -15,7 +15,7 @@ public class LumbererManager : EntityManager<Lumberer, LumbererManager>
     public int spawnCount = 1;
     public float spawnCD = 1f;
     public float navMeshAgentSpeed = 1f;
-
+    public GameObject LumbererEscape;
     void Start()
     {
         ArrangeChild();
@@ -70,5 +70,20 @@ public class LumbererManager : EntityManager<Lumberer, LumbererManager>
             lumberer.Stop();
     }
 #endif
+
+    public bool RemoveLumberer(Lumberer lumberer)
+    {
+        bool ret = true;
+        for (int idx = 0; idx != entitys.Count; idx++)
+        {
+            if (entitys[idx] == lumberer)
+            {
+                entitys.RemoveAt(idx);
+                ret = false;
+                break;
+            }
+        }
+        return ret;
+    }
 
 }

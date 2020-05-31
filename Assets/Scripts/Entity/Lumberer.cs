@@ -31,12 +31,15 @@ public class Lumberer : MonoBehaviour, IEntity
 
     [NonSerialized] public Tree closestTree;
 
+    private GameObject LumbererEscape;
+
     public void Start()
     {
         cc = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
         animator.speed = LumbererManager.I.navMeshAgentSpeed;
         agent = GetComponent<NavMeshAgent>();
+        LumbererEscape = LumbererManager.I.LumbererEscape;
         Debug.Assert(agent != null);
     }
 
@@ -175,22 +178,18 @@ public class Lumberer : MonoBehaviour, IEntity
     {
         Debug.Log($"{name} dead");
         this.isAlive = false;
-        DeathAnimation();
-        // TODO 修改成 animator ... onExit 之类的
-        // Invoke("TrueDie", dieSpeed);
-        // 已完成由 Animator 的托管
+        var position = transform.position;
+        var rotation = transform.rotation;
+        LumbererManager.I.RemoveLumberer(this);
+        Destroy(gameObject);
+
+        // 当做逃离动画使用的外壳
+        var shell = Instantiate(LumbererEscape, position, rotation, LumbererManager.I.transform);
+        shell.GetComponent<Animator>().SetFloat("velocity", 1f);
+        shell.GetComponent<Animator>().speed = LumbererManager.I.navMeshAgentSpeed * 1.5f;
+        shell.GetComponent<NavMeshAgent>().speed = LumbererManager.I.navMeshAgentSpeed * 1.5f;
+        shell.GetComponent<NavMeshAgent>().SetDestination(position * 10f);  // 朝背离中心的反方向逃离（问题）
     }
-
-    private void DeathAnimation()
-    {
-
-    }
-
-    public void TrueDie()
-    {
-        DestroyImmediate(this.GetComponent<GameObject>());
-    }
-
     public void TakeDamage(float damage, GameObject attacker)
     {
         if (Time.time - lastDamagedTime < takeDamageCD) 
@@ -198,7 +197,7 @@ public class Lumberer : MonoBehaviour, IEntity
             return;
         }
         lastDamagedTime = Time.time;
-        Debug.Log($"Take {damage} damage from {attacker}");
+        Debug.Log($"{name} take {damage} damage from {attacker}");
         this.health -= damage;
         if (health <= 0f && isAlive)
         {
@@ -209,7 +208,6 @@ public class Lumberer : MonoBehaviour, IEntity
             TakeDamageAnimation();
         }
     }
-
     private void TakeDamageAnimation()
     {
 

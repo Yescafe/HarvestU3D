@@ -6,7 +6,6 @@ using UnityEngine;
 public class Tree : MonoBehaviour, IEntity
 {
     public float health = 10f;
-    public float defense = 0f;
 
     public void TakeDamage(float damage, GameObject attaker)
     {

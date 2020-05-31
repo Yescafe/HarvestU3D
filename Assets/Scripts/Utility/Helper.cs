@@ -38,4 +38,19 @@ static public class Helper
         Debug.Log(message);
 #endif
     }
+
+    // 用不了，不会写 C# 的泛型
+    public static bool RemoveFromKdTree(MonoBehaviour instance, KdTree<MonoBehaviour> trees) {
+        bool ret = true;
+        for (int idx = 0; idx != trees.Count; idx++)
+        {
+            if (trees[idx] == instance)
+            {
+                trees.RemoveAt(idx);
+                ret = false;
+                break;
+            }
+        }
+        return ret;
+    }
 }

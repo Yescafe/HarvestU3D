@@ -2,17 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BirdManager : DCLSingletonBase<BirdManager>
+public class BirdManager : EntityManager<Bird, BirdManager>
 {
     [SerializeField] Material selectedMaterial;
     [SerializeField] Material unSelectedMaterial;
 
-    List<Bird> birds = new List<Bird>();
+    public int spawnCount = 10;
+    public float spawnHeight = 2f;
+
+    // List<Bird> birds = new List<Bird>();
     List<Bird> selectedBirds = new List<Bird>();
     // Start is called before the first frame update
     void Start()
     {
-
+        SpawnBird();
     }
 
     void Update()
@@ -97,6 +100,9 @@ public class BirdManager : DCLSingletonBase<BirdManager>
 
     void SpawnBird()
     {
-
+        while (entitys.Count < spawnCount) 
+        {
+            CreateEntity(Helper.RandomOnCircle(new Vector3(0, spawnHeight, 0), 2f));
+        }
     }
 }

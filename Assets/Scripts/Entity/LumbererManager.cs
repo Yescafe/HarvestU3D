@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-public class LumbererManager : DCLSingletonBase<LumbererManager>
+public class LumbererManager : EntityManager<Lumberer, LumbererManager>
 {
-    public GameObject lumbererPrefab;
-
     public float lumbererHeight = 0.45f;
     Lumberer lumberer;
 
@@ -16,42 +14,22 @@ public class LumbererManager : DCLSingletonBase<LumbererManager>
     public int spawnCount = 1;
     public float spawnCD = 1f;
 
-    private KdTree<Lumberer> lumberers = new KdTree<Lumberer>();
-
     void Start()
     {
         ArrangeChild();
         StartCoroutine(Spawn());
     }
 
-    void ArrangeChild()
-    {
-        var tmps = transform.GetComponentsInChildren<Lumberer>();
-        foreach (var lumb in tmps)
-        {
-            lumberers.Add(lumb);
-        }
-    }
-
     IEnumerator Spawn()
     {
         var spawnRadius = distToOuterTree + Trees.I.radius;
-        while (lumberers.Count < spawnCount)
+        while (entitys.Count < spawnCount)
         {
-            var lumb = CreateLumberer(Helper.RandomOnCircle(Vector3.up * lumbererHeight, spawnRadius));
+            var lumb = CreateEntity(Helper.RandomOnCircle(Vector3.up * lumbererHeight, spawnRadius));
             SetTargetTree4Lumberer(lumb);
             yield return new WaitForSeconds(spawnCD);
         }
         yield return null;
-    }
-
-    Lumberer CreateLumberer(Vector3 pos)
-    {
-        var go = Instantiate(lumbererPrefab, pos, Quaternion.identity, transform);
-        var lumb = go.GetComponent<Lumberer>();
-        lumberers.Add(lumb);
-        Debug.Log($"Created Lumberer at {pos}");
-        return lumb;
     }
 
     public void SetTargetTree4Lumberer(Lumberer lumberer)
@@ -64,7 +42,6 @@ public class LumbererManager : DCLSingletonBase<LumbererManager>
         }
     }
 
-    public Lumberer GetClosest(Vector3 pos) => lumberers.FindClosest(pos);
 #if USER_CONTROL
     void Update()
     {

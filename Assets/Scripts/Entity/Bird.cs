@@ -15,7 +15,7 @@ public class Bird : MonoBehaviour, IEntity
     public int atk = 2;
 
     public float moveVel = 10f;
-    public float moveBackVel = 5f;
+    public float moveBackVel = -10f;
 
     private Vector3 target;
     private Lumberer toChase = null;
@@ -151,12 +151,11 @@ public class Bird : MonoBehaviour, IEntity
 
         ScreenLogger.I.AddLine($"target {target}, deltaPos {deltaPos}, distance {distance}");
 
-        // TODO 不能触发攻击
         if (distance < 1f)
         {
             Helper.Log($"attack");
             toChase.TakeDamage(atk, gameObject);
-            curVel = -10f;
+            curVel = moveBackVel;
         }
         MoveForward();
     }

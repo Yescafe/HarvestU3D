@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.AI;
 
 public class LumbererManager : DCLSingletonBase<LumbererManager>
 {
@@ -15,6 +16,7 @@ public class LumbererManager : DCLSingletonBase<LumbererManager>
     public float distToOuterTree;
     public int spawnCount = 1;
     public float spawnCD = 1f;
+    public float navMeshAgentSpeed = 1f;
 
     private KdTree<Lumberer> lumberers = new KdTree<Lumberer>();
 
@@ -39,6 +41,7 @@ public class LumbererManager : DCLSingletonBase<LumbererManager>
         while (lumberers.Count < spawnCount)
         {
             var lumb = CreateLumberer(Helper.RandomOnCircle(Vector3.up * lumbererHeight, spawnRadius));
+            lumb.gameObject.name = $"Lumberer {lumberers.Count}";
             SetTargetTree4Lumberer(lumb);
             yield return new WaitForSeconds(spawnCD);
         }
@@ -49,6 +52,7 @@ public class LumbererManager : DCLSingletonBase<LumbererManager>
     {
         var go = Instantiate(lumbererPrefab, pos, Quaternion.identity, transform);
         var lumb = go.GetComponent<Lumberer>();
+        lumb.GetComponent<NavMeshAgent>().speed = navMeshAgentSpeed;
         lumberers.Add(lumb);
         Debug.Log($"Created Lumberer at {pos}");
         return lumb;

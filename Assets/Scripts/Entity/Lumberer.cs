@@ -32,6 +32,7 @@ public class Lumberer : MonoBehaviour, IEntity
     {
         cc = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
+        animator.speed = LumbererManager.I.navMeshAgentSpeed;
         agent = GetComponent<NavMeshAgent>();
         Debug.Assert(agent != null);
     }
@@ -55,6 +56,7 @@ public class Lumberer : MonoBehaviour, IEntity
         }
     }
 
+    /*
     public void OnTriggerEnter(Collider other)
     {
         // 防止伐木人之间互相卡位，完成随机位移
@@ -68,35 +70,38 @@ public class Lumberer : MonoBehaviour, IEntity
             // cc.SimpleMove(randomVelocity);
         }
     }
+    */
 
     #region Navigation
 
     public void SetDestination(Vector3 target) {
-        Debug.Log($"Setted Destination: {target}");
+        Debug.Log($"{this.name} Setted Destination: {target}");
         Debug.Assert(agent != null);
-        Debug.Assert(agent.SetDestination(target), "Set Destination Failed");
+        var assertInfo = agent.SetDestination(target);
+        Debug.Assert(assertInfo, "Set Destination Failed");
     }
 
     /// <param name="modDist">
     ///     最终目的地距离目标的距离，预留一个大于 0 的值可以防止<del>秦王</del>伐木人绕树
     ///     对目前的情况，`.3f` 是个比较合适的值。该值正常情况下由 LumbererManager 控制。
     /// </param>
-    public void SetDestination(Vector3 target, float modDist)
+    public void SetDestination(Vector3 target, float modDist, String targetName)
     {
         var dirToTarget = (target - transform.position).normalized;
         var modTargetPos = target - dirToTarget * modDist;
-        Debug.Log($"Setted Destination: {modTargetPos}");
+        Debug.Log($"{this.name} Setted Destination {modTargetPos} ({targetName})");
         if (agent == null)
-            agent = GetComponent<NavMeshAgent>();            
+            agent = GetComponent<NavMeshAgent>();
         Debug.Assert(agent != null);
-        Debug.Assert(agent.SetDestination(modTargetPos), "Set Destination Failed");
+        var assertInfo = agent.SetDestination(modTargetPos);
+        Debug.Assert(assertInfo, "Set Destination Failed");
     }
 
     public void SetTargetTree(Tree target, float modDist)
     {
         closestTree = target;
         if (target != null)
-            SetDestination(target.transform.position, modDist);
+            SetDestination(target.transform.position, modDist, target.name);
         else
             Debug.Log("There is no more trees in the map. Lumberer won.");
     }

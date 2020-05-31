@@ -14,6 +14,7 @@ public class Bird : MonoBehaviour, IEntity
     public float attackDist = 1f;
     public int atk = 2;
     public float atkRange = 1f;
+    public float atkCD = 1f;
 
     public float moveVel = 10f;
     public float moveBackVel = -10f;
@@ -31,7 +32,6 @@ public class Bird : MonoBehaviour, IEntity
     void Start()
     {
         curState = Idle;
-        curVel = moveVel;
     }
 
     void Update()
@@ -43,12 +43,15 @@ public class Bird : MonoBehaviour, IEntity
         // }
         UpdateTarget();
         curState();
+
+        MoveForward();
     }
 
     public void SetTarget(Vector3 target_)
     {
         target = target_;
-        if (idling) {
+        if (idling)
+        {
             transform.rotation = Quaternion.LookRotation(target.OmitY() - transform.position.OmitY());
         }
         curState = Aim2Target;
@@ -56,6 +59,10 @@ public class Bird : MonoBehaviour, IEntity
 
     void Idle()
     {
+        curVel = Mathf.Lerp(curVel, 0, Time.deltaTime * 10);
+        var rot = transform.rotation.eulerAngles;
+        rot.z = Mathf.LerpAngle(rot.z, 0, Time.deltaTime * rotZScale);
+        rot.x = Mathf.LerpAngle(rot.x, 0, Time.deltaTime * rotXScale);
     }
 
     void UpdateTarget()
@@ -66,22 +73,35 @@ public class Bird : MonoBehaviour, IEntity
         }
         else
         {
-            var lumb = LumbererManager.I.GetClosest(transform.position);
-            if (lumb == null)
-            {
-                return;
-            }
-            var deltaPos = lumb.transform.position.OmitY() - transform.position.OmitY();
-            if (deltaPos.magnitude < watchDist)
-            {
-                toChase = lumb;
-                curState = Aim2Target;
-            }
+            WatchLumberer();
         }
+    }
+
+    /// <summary>
+    /// 侦察周围 watchDist 的距离内是否有伐木人 
+    /// </summary>
+    bool WatchLumberer()
+    {
+        //            
+        var lumb = LumbererManager.I.GetClosest(transform.position);
+        if (lumb == null)
+        {
+            return false;
+        }
+        var deltaPos = lumb.transform.position.OmitY() - transform.position.OmitY();
+        if (deltaPos.magnitude < watchDist)
+        {
+            toChase = lumb;
+            curState = Aim2Target;
+            Debug.Log($"Chase {lumb.name}");
+            return true;
+        }
+        return false;
     }
 
     void Aim2Target()
     {
+        curVel = Mathf.Lerp(curVel, moveVel, Time.deltaTime * 10);
         var rot = transform.rotation.eulerAngles;
 
         var deltaPos = target - transform.position;
@@ -89,13 +109,14 @@ public class Bird : MonoBehaviour, IEntity
 
         if (distance < 0.1f)
         {
+            Debug.Log("靠近目标，停留一下", this);
             curState = Idle;
             return;
         }
 
         Vector3 local2TargetDir = (transform.worldToLocalMatrix * deltaPos).normalized;
 
-        if (Mathf.Abs(local2TargetDir.x) < 0.2f && distance < attackDist)
+        if (Chasing && Mathf.Abs(local2TargetDir.x) < 0.2f && distance < attackDist)
         {
             curState = ChaseToAttack;
             Debug.Log($"Prepare to attack {local2TargetDir}");
@@ -133,36 +154,48 @@ public class Bird : MonoBehaviour, IEntity
 
         ScreenLogger.I.Add($"RotZ {rot.z}\n RotY {rot.y}\n deltaRotY {deltaRotY}\n {local2TargetDir}\n\n");
         transform.rotation = Quaternion.Euler(rot);
-
-        MoveForward();
     }
 
     void ChaseToAttack()
     {
-        if (toChase.IsDead)
+        if (!toChase.IsAlive)
         {
-            Helper.Log("ToChase lumberer is dead");
+            Debug.Log("目标已死");
+            if (WatchLumberer())
+            {
+                return;
+            }
             var tree = Trees.I.GetClosestTree(transform.position);
-            target = tree.transform.position;
-            curState = Aim2Target;
+            if (tree != null)
+            {
+                target = tree.transform.position;
+                curState = Aim2Target;
+            }
+            else
+            {
+                Debug.Log("鸟没有最近的树木可以飞回");
+                curState = Idle;
+            }
+            return;
         }
-        
+
         // 直接锁定目标
         transform.rotation = Quaternion.LookRotation(target - transform.position);
         var deltaPos = target - transform.position;
         var distance = deltaPos.magnitude;
-        
-        curVel = Mathf.Lerp(curVel, moveVel, Time.deltaTime);
+
+        // 从后退后回到前进速度所需要的时间，如果设置为 Time.deltaTime 则需要一秒以上，
+        // 因此除以 atkCD，
+        curVel = Mathf.Lerp(curVel, moveVel, Time.deltaTime / atkCD);
 
         ScreenLogger.I.AddLine($"target {target}, deltaPos {deltaPos}, distance {distance}");
 
         if (distance < atkRange)
         {
-            Helper.Log($"attack");
+            Debug.Log($"attack");
             toChase.TakeDamage(atk, gameObject);
             curVel = moveBackVel;
         }
-        MoveForward();
     }
 
     /// <summary>
@@ -188,17 +221,6 @@ public class Bird : MonoBehaviour, IEntity
     {
 
     }
-    
-    void OnTriggerEnter(Collider collider)
-    {
-        if (!Chasing && collider.CompareTag("Lumberer"))
-        {
-            Debug.Log($"Chase Target {collider.name}");
-            toChase = collider.GetComponent<Lumberer>();
-            curState = Aim2Target;
-        }
-    }
-
 
     void MoveForward()
     {

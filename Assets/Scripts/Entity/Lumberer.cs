@@ -10,13 +10,12 @@ public class Lumberer : MonoBehaviour, IEntity
     public float speed;                 // walking speed 
     public float turnSpeed;             // turning speed
 
-    public float power = 5f;            // attack power
+    public float atk = 5f;            // attack power
+    public float takeDamageCD = 2f;
 
     private CharacterController cc;
     [NonSerialized] public Animator animator;
-    private NavMeshAgent agent;
     
-    private bool isAlive = true;
 
     [NonSerialized] public bool isAttacking = false;    // 目前弃用
     [NonSerialized] public bool isAttackTriggering = false;
@@ -24,7 +23,11 @@ public class Lumberer : MonoBehaviour, IEntity
 
     public float health = 10f;
 
-    public bool IsDead => !isAlive;
+    public bool IsAlive => isAlive;
+
+    private NavMeshAgent agent;
+    private bool isAlive = true;
+    private float lastDamagedTime = 0f;
 
     [NonSerialized] public Tree closestTree;
 
@@ -89,7 +92,7 @@ public class Lumberer : MonoBehaviour, IEntity
     {
         var dirToTarget = (target - transform.position).normalized;
         var modTargetPos = target - dirToTarget * modDist;
-        Debug.Log($"{this.name} Setted Destination {modTargetPos} ({targetName})");
+        // Debug.Log($"{this.name} Setted Destination {modTargetPos} ({targetName})");
         if (agent == null)
             agent = GetComponent<NavMeshAgent>();
         Debug.Assert(agent != null);
@@ -170,6 +173,7 @@ public class Lumberer : MonoBehaviour, IEntity
 
     public void Death()
     {
+        Debug.Log($"{name} dead");
         this.isAlive = false;
         DeathAnimation();
         // TODO 修改成 animator ... onExit 之类的
@@ -187,8 +191,14 @@ public class Lumberer : MonoBehaviour, IEntity
         DestroyImmediate(this.GetComponent<GameObject>());
     }
 
-    public void TakeDamage(float damage, GameObject attaker)
+    public void TakeDamage(float damage, GameObject attacker)
     {
+        if (Time.time - lastDamagedTime < takeDamageCD) 
+        {
+            return;
+        }
+        lastDamagedTime = Time.time;
+        Debug.Log($"Take {damage} damage from {attacker}");
         this.health -= damage;
         if (health <= 0f && isAlive)
         {

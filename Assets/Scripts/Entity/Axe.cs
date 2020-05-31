@@ -11,7 +11,7 @@ public class Axe : MonoBehaviour
 
     void Start()
     {
-        power = lumberer.power;
+        power = lumberer.atk;
         animator = lumberer.animator;
     }
 
@@ -30,7 +30,7 @@ public class Axe : MonoBehaviour
             var otherDefense = other.gameObject.GetComponent<Tree>().defense;
             other.gameObject.GetComponent<Tree>().TakeDamage(power - otherDefense, gameObject);
             lumberer.isHit = true;
-            Debug.Log($"TakeDamage({power - otherDefense}) on `{other.gameObject.name}`, this attack has been hit.");
+            // Debug.Log($"TakeDamage({power - otherDefense}) on `{other.gameObject.name}`, this attack has been hit.");
         }
     }
     

@@ -24,7 +24,8 @@ public class EntityManager<EntityT, ManagerT> : DCLSingletonBase<ManagerT>
         var go = Instantiate(entityPrefab, pos, Quaternion.identity, transform);
         var entity = go.GetComponent<EntityT>() ?? go.AddComponent<EntityT>();
         entitys.Add(entity);
-        Debug.Log($"Created {entity.name} at {pos}");
+        go.name = $"{typeof(EntityT)} {entitys.Count}";
+        // Debug.Log($"Created {entity.name} at {pos}");
         return entity;
     }
 

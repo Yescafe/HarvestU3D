@@ -113,5 +113,6 @@ MonoBehaviour:
   watchDist: 5
   attackDist: 3
   atk: 2
+  atkRange: 0.2
   moveVel: 10
-  moveBackVel: 5
+  moveBackVel: -5

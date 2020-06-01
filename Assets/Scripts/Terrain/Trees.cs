@@ -23,6 +23,8 @@ public class Trees : DCLSingletonBase<Trees>
     // TODO 如何序列化这玩意，以便在 Inspector 进行修改
     public GenerateType generator;
 
+    public GameObject treeStump;
+
     public enum GenerateType
     {
         Circle,

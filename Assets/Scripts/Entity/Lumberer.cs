@@ -37,7 +37,7 @@ public class Lumberer : MonoBehaviour, IEntity
     {
         cc = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
-        animator.speed = LumbererManager.I.navMeshAgentSpeed;
+        animator.speed = LumbererManager.I.navMeshAgentSpeed * .75f;
         agent = GetComponent<NavMeshAgent>();
         LumbererEscape = LumbererManager.I.LumbererEscape;
         Debug.Assert(agent != null);
@@ -180,15 +180,32 @@ public class Lumberer : MonoBehaviour, IEntity
         this.isAlive = false;
         var position = transform.position;
         var rotation = transform.rotation;
-        LumbererManager.I.RemoveLumberer(this);
-        Destroy(gameObject);
+        var limit = 15f - .5f;   // 这个数值关联地板宽度，这里取目前地板x/z缩放的一半，即30f/2，并设置0.5f的安全边界范围
+        var speedScale = 1.5f;
 
         // 当做逃离动画使用的外壳
         var shell = Instantiate(LumbererEscape, position, rotation, LumbererManager.I.transform);
-        shell.GetComponent<Animator>().SetFloat("velocity", 1f);
-        shell.GetComponent<Animator>().speed = LumbererManager.I.navMeshAgentSpeed * 1.5f;
-        shell.GetComponent<NavMeshAgent>().speed = LumbererManager.I.navMeshAgentSpeed * 1.5f;
-        shell.GetComponent<NavMeshAgent>().SetDestination(position * 10f);  // 朝背离中心的反方向逃离（问题）
+        shell.GetComponent<Animator>().speed = LumbererManager.I.navMeshAgentSpeed * speedScale * .75f;
+        shell.GetComponent<NavMeshAgent>().speed = LumbererManager.I.navMeshAgentSpeed * speedScale;
+
+        Vector3 destination = new Vector3();
+        destination.y = position.y;
+        // 将当前的坐标等比例缩放到边界上的坐标，设置为 destination
+        if (position.x > position.z)
+        {
+            destination.x = limit;
+            destination.z = position.z * (destination.x / position.x);
+        }
+        else
+        {
+            destination.z = limit;
+            destination.x = position.x * (destination.z / position.z);
+        }
+        shell.GetComponent<NavMeshAgent>().SetDestination(destination);  // 朝背离中心的反方向逃离（问题）
+        Debug.Log($"{name} is dead, the new shell run to {destination}");
+
+        LumbererManager.I.RemoveLumberer(this);
+        Destroy(gameObject);
     }
     public void TakeDamage(float damage, GameObject attacker)
     {

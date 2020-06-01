@@ -7,19 +7,50 @@ public class Tree : MonoBehaviour, IEntity
 {
     public float health = 10f;
 
+    private GameObject treeStump;
+    private bool isDead = false;
+
+
+    private Vector3 deathDeltaPos;
+    private float deathRotationTheta;
+
+    private void Start()
+    {
+        treeStump = Trees.I.treeStump;
+    }
+
+    private void Update()
+    {
+        if (isDead)
+        {
+            transform.Rotate(new Vector3(Mathf.Sin(deathRotationTheta), 0f, Mathf.Cos(deathRotationTheta)) * Time.deltaTime);
+            if (transform.eulerAngles.x >= 90f)
+                Destroy(gameObject);
+        }
+    }
     public void TakeDamage(float damage, GameObject attaker)
     {
         health -= damage;
         if (health <= 0f)
         {
-            Death();
+            Death(attaker);
         }
     }
     
-    void Death()
+    void Death(GameObject murderer)
     {
         DeathAnimation();
-        TrueDie();
+
+        var position = transform.position;
+        var rotation = transform.rotation;
+        Instantiate(treeStump, position, rotation, Trees.I.transform);
+
+        deathDeltaPos = murderer.transform.position - this.transform.position;
+        deathRotationTheta = (float) Math.Tanh(deathDeltaPos.z / deathDeltaPos.x) + 90f;
+        Debug.Log($"{name} deathRotationTheta = {deathRotationTheta}");
+
+        Trees.I.RemoveTree(this);
+        isDead = true;
     }
 
     void DeathAnimation()
@@ -27,18 +58,4 @@ public class Tree : MonoBehaviour, IEntity
 
     }
     
-    public void TrueDie()
-    {
-        // Trees.I.RemoveTree(this);
-        //
-        // WARN HERE
-        //
-        // 这段逻辑可能有待优化。为防止 handling reference，需要让 KDTree 取消对即将
-        // 删除的对象的引用。这里采用遍历的方法，复杂度有点高。但是如果没办法也无大碍。
-        //
-        // Find 方法在本操作中并无实际作用。
-
-        Trees.I.RemoveTree(this);
-        Destroy(gameObject);
-    }
 }

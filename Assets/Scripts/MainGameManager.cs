@@ -5,28 +5,38 @@ using System.Data;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MainGameManager : MonoBehaviour
+public class MainGameManager : DCLSingletonBase<MainGameManager>
 {
     [NonSerialized] public bool isLumbererWon = false;
     [NonSerialized] public bool isNatureWon = false;
 
-    public GameObject dispInfo;
+    public Text dispInfo;
+    public Text natureInfo;
 
-    public void UpdateStatus()
+    private int naturePower = 0;
+
+    void Start()
     {
-        if (Trees.I.GetComponent<Transform>().childCount == 0)
-        {
-            isLumbererWon = true;
-            isNatureWon = !isLumbererWon;
-        }
+        UpdateNaturePower();
     }
 
-    public void Update()
+    private void UpdateNaturePower()
     {
-        UpdateStatus();
-        if (isLumbererWon)
+        var maxRedness = .6f;
+        natureInfo.text = $"{naturePower} / 100";
+        natureInfo.color = new Color(1f, 1f - .01f * maxRedness * naturePower, 1f - .01f * maxRedness * naturePower, 1f);
+        Debug.Log(natureInfo.color);
+    }
+
+    public void IncNaturePower(int point)
+    {
+        naturePower += point;
+        UpdateNaturePower();
+        if (naturePower >= 100)
         {
-            dispInfo.GetComponent<Text>().text = "Lumberers Won!";
+            isLumbererWon = true;
+            isNatureWon = false;
+            dispInfo.text = "Lumberers Won!";
         }
     }
 }

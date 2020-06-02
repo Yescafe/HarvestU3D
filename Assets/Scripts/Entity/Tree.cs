@@ -6,6 +6,7 @@ using UnityEngine;
 public class Tree : MonoBehaviour, IEntity
 {
     public float health = 10f;
+    public GameObject treeStumps;
 
     private GameObject treeStump;
     private bool isDead = false;
@@ -23,9 +24,7 @@ public class Tree : MonoBehaviour, IEntity
     {
         if (isDead)
         {
-            transform.Rotate(new Vector3(Mathf.Sin(deathRotationTheta), 0f, Mathf.Cos(deathRotationTheta)) * Time.deltaTime);
-            if (transform.eulerAngles.x >= 90f)
-                Destroy(gameObject);
+            transform.Rotate(new Vector3(Mathf.Sin(deathRotationTheta), 0f, Mathf.Cos(deathRotationTheta)) * Time.deltaTime * 200);
         }
     }
     public void TakeDamage(float damage, GameObject attaker)
@@ -43,7 +42,7 @@ public class Tree : MonoBehaviour, IEntity
 
         var position = transform.position;
         var rotation = transform.rotation;
-        Instantiate(treeStump, position, rotation, Trees.I.transform);
+        Instantiate(treeStump, position, rotation, TreeStump.I.transform);
 
         deathDeltaPos = murderer.transform.position - this.transform.position;
         deathRotationTheta = (float) Math.Tanh(deathDeltaPos.z / deathDeltaPos.x) + 90f;
@@ -51,6 +50,9 @@ public class Tree : MonoBehaviour, IEntity
 
         Trees.I.RemoveTree(this);
         isDead = true;
+
+        // 暂时没什么办法，现在这里销毁
+        Destroy(gameObject);
     }
 
     void DeathAnimation()

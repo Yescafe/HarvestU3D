@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Outlined_Custom Constant Width
+  m_Name: BirdSelect
   m_Shader: {fileID: 4800000, guid: 76c59693460e3e341a354e978bf2b450, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4

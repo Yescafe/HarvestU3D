@@ -60,7 +60,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 10
-  defense: 0
 --- !u!208 &5405590707786536434
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -85,7 +84,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4633143647473668587}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 0.5, z: 1}

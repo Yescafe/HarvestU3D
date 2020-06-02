@@ -4,8 +4,13 @@ using UnityEngine;
 
 public class BirdManager : EntityManager<Bird, BirdManager>
 {
-    [SerializeField] Material selectedMaterial;
+    [SerializeField] Material birdSelectedMaterial;
+    [SerializeField] Material treeSelectedMaterial;
+    [SerializeField] Material lumbererSelectedMaterial;
     [SerializeField] Material unSelectedMaterial;
+
+    private Material[] treeUnSelectedMaterials;
+    private Material[] lumbererUnSelectedMaterials;
 
     public int spawnCount = 10;
     public float spawnHeight = 2f;
@@ -14,11 +19,18 @@ public class BirdManager : EntityManager<Bird, BirdManager>
 
     // List<Bird> birds = new List<Bird>();
     List<Bird> selectedBirds = new List<Bird>();
-    
+
     private float mouseDownTime = 0f;
     private bool drawRectangle = false;
     private Vector3 rectStart, rectEnd;
-    
+
+    /// <summary>
+    /// 当前鼠标悬浮所指的物体，假设同时不可能指向两个
+    /// </summary>
+    private GameObject curHover;
+
+    public bool Selecting => selectedBirds.Count > 0;
+
     void Start()
     {
         SpawnBird();
@@ -53,7 +65,58 @@ public class BirdManager : EntityManager<Bird, BirdManager>
                 RectSelect();
             }
         }
+
+        if (Selecting)
+        {
+            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit raycastHit;
+            if (Physics.Raycast(ray, out raycastHit, 50f, LayerMask.GetMask("Tree", "Lumberer")))
+            {
+                HoverObject(raycastHit.collider.gameObject);
+            }
+            else
+            {
+                UnHoverObject();
+            }
+        }
     }
+
+    void HoverObject(GameObject go)
+    {
+        UnHoverObject();
+        curHover = go;
+        var mesh = curHover.GetComponentInChildren<MeshRenderer>();
+        if (go.CompareTag("Tree"))
+        {
+            treeUnSelectedMaterials = mesh.materials;
+            mesh.materials = new Material[] {treeSelectedMaterial, treeSelectedMaterial};
+        }
+        else
+        {
+            lumbererUnSelectedMaterials = mesh.materials;
+            mesh.material = lumbererSelectedMaterial;
+        }
+    }
+
+    void UnHoverObject()
+    {
+        if (curHover != null)
+        {
+            Debug.Log("Unhover");
+            var mesh = curHover.GetComponentInChildren<MeshRenderer>();
+            if (curHover.CompareTag("Tree"))
+            {
+                Debug.Log("交换回来了树的 material");
+                mesh.materials = treeUnSelectedMaterials;
+            }
+            else
+            {
+                mesh.materials = lumbererUnSelectedMaterials;
+            }
+            curHover = null;
+        }
+    }
+
 
     void ClickSelect()
     {
@@ -104,7 +167,8 @@ public class BirdManager : EntityManager<Bird, BirdManager>
             p1.x = rectEnd.x;
             p2.x = rectStart.x;
         }
-        else {
+        else
+        {
             p1.x = rectStart.x;
             p2.x = rectEnd.x;
         }
@@ -114,7 +178,8 @@ public class BirdManager : EntityManager<Bird, BirdManager>
             p1.y = rectEnd.y;
             p2.y = rectStart.y;
         }
-        else {
+        else
+        {
             p1.y = rectStart.y;
             p2.y = rectEnd.y;
         }
@@ -134,7 +199,7 @@ public class BirdManager : EntityManager<Bird, BirdManager>
         }
     }
 
-    
+
 
     #region Selection
 
@@ -153,12 +218,12 @@ public class BirdManager : EntityManager<Bird, BirdManager>
 
     void SelectBird(GameObject go)
     {
-        go.GetComponent<MeshRenderer>().material = selectedMaterial;
+        go.GetComponent<MeshRenderer>().material = birdSelectedMaterial;
         selectedBirds.Add(go.GetComponent<Bird>());
     }
     void SelectBird(Bird bird)
     {
-        bird.GetComponent<MeshRenderer>().material = selectedMaterial;
+        bird.GetComponent<MeshRenderer>().material = birdSelectedMaterial;
         selectedBirds.Add(bird);
     }
 
@@ -176,11 +241,11 @@ public class BirdManager : EntityManager<Bird, BirdManager>
         selectedBirds.Clear();
     }
 
-#endregion
+    #endregion
 
     void SpawnBird()
     {
-        while (entitys.Count < spawnCount) 
+        while (entitys.Count < spawnCount)
         {
             CreateEntity(Helper.RandomOnCircle(new Vector3(0, spawnHeight, 0), 2f));
         }

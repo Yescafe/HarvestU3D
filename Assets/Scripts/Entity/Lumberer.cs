@@ -177,6 +177,7 @@ public class Lumberer : MonoBehaviour, IEntity
     public void Death()
     {
         Debug.Log($"{name} dead");
+        LumbererManager.I.RemoveLumberer(this);
         this.isAlive = false;
         var position = transform.position;
         var rotation = transform.rotation;
@@ -204,7 +205,6 @@ public class Lumberer : MonoBehaviour, IEntity
         shell.GetComponent<NavMeshAgent>().SetDestination(destination);  // 朝背离中心的反方向逃离（问题）
         Debug.Log($"{name} is dead, the new shell run to {destination}");
 
-        LumbererManager.I.RemoveLumberer(this);
         Destroy(gameObject);
     }
     public void TakeDamage(float damage, GameObject attacker)

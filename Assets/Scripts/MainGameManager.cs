@@ -12,6 +12,7 @@ public class MainGameManager : DCLSingletonBase<MainGameManager>
 
     public Text dispInfo;
     public Text natureInfo;
+    public int maxNaturePower = 100;
 
     private int naturePower = 0;
 
@@ -23,16 +24,16 @@ public class MainGameManager : DCLSingletonBase<MainGameManager>
     private void UpdateNaturePower()
     {
         var maxRedness = .6f;
-        natureInfo.text = $"{naturePower} / 100";
+        natureInfo.text = $"{naturePower} / {maxNaturePower}";
         natureInfo.color = new Color(1f, 1f - .01f * maxRedness * naturePower, 1f - .01f * maxRedness * naturePower, 1f);
-        Debug.Log(natureInfo.color);
+        // Debug.Log(natureInfo.color);
     }
 
     public void IncNaturePower(int point)
     {
         naturePower += point;
         UpdateNaturePower();
-        if (naturePower >= 100)
+        if (naturePower >= maxNaturePower)
         {
             isLumbererWon = true;
             isNatureWon = false;

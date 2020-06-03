@@ -93,7 +93,7 @@ public class Bird : MonoBehaviour, IEntity
         {
             toChase = lumb;
             curState = Aim2Target;
-            Debug.Log($"Chase {lumb.name}");
+            Debug.Log($"Chase {lumb.name}", gameObject);
             return true;
         }
         return false;
@@ -163,11 +163,14 @@ public class Bird : MonoBehaviour, IEntity
             Debug.Log("目标已死");
             if (WatchLumberer())
             {
+                // TODO 目标已死后依然停留在目标上的原因 =》 watchLubmerer 得到的是这个死去的伐木人
+                Debug.Log($"找到下一个要攻击的伐木人了 {toChase.name}", gameObject);
                 return;
             }
             var tree = Trees.I.GetClosestTree(transform.position);
             if (tree != null)
             {
+                Debug.Log($"找到最近可以飞回的树木了 {tree.name}", gameObject);
                 target = tree.transform.position;
                 curState = Aim2Target;
             }

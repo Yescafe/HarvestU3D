@@ -60,6 +60,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 10
+  treeStumps: {fileID: 0}
 --- !u!208 &5405590707786536434
 NavMeshObstacle:
   m_ObjectHideFlags: 0

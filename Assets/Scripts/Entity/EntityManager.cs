@@ -29,5 +29,11 @@ public class EntityManager<EntityT, ManagerT> : DCLSingletonBase<ManagerT>
         return entity;
     }
 
+    public virtual void RemoveEntity(EntityT entity)
+    {
+        entitys.Remove(entity);
+        Destroy(entity.gameObject);
+    }
+
     public EntityT GetClosest(Vector3 pos) => entitys.FindClosest(pos);
 }

@@ -102,11 +102,11 @@ public class BirdManager : EntityManager<Bird, BirdManager>
     {
         if (curHover != null)
         {
-            Debug.Log("Unhover");
+            // Debug.Log("Unhover");
             var mesh = curHover.GetComponentInChildren<MeshRenderer>();
             if (curHover.CompareTag("Tree"))
             {
-                Debug.Log("交换回来了树的 material");
+                // Debug.Log("交换回来了树的 material");
                 mesh.materials = treeUnSelectedMaterials;
             }
             else

@@ -195,7 +195,7 @@ public class Bird : MonoBehaviour, IEntity
 
         if (distance < atkRange)
         {
-            Debug.Log($"attack");
+            Debug.Log($"attack {atk} points");
             toChase.TakeDamage(atk, gameObject);
             curVel = moveBackVel;
         }

@@ -31,7 +31,7 @@ public class Lumberer : MonoBehaviour, IEntity
 
     [NonSerialized] public Tree closestTree;
 
-    private GameObject LumbererEscape;
+    private GameObject lumbererEscape;
 
     public void Start()
     {
@@ -39,7 +39,7 @@ public class Lumberer : MonoBehaviour, IEntity
         animator = GetComponent<Animator>();
         animator.speed = LumbererManager.I.navMeshAgentSpeed * .75f;
         agent = GetComponent<NavMeshAgent>();
-        LumbererEscape = LumbererManager.I.LumbererEscape;
+        lumbererEscape = LumbererManager.I.LumbererEscape;
         Debug.Assert(agent != null);
     }
 
@@ -185,7 +185,7 @@ public class Lumberer : MonoBehaviour, IEntity
         var speedScale = 1.5f;
 
         // 当做逃离动画使用的外壳
-        var shell = Instantiate(LumbererEscape, position, rotation, LumbererManager.I.transform);
+        var shell = Instantiate(lumbererEscape, position, rotation, LumbererManager.I.transform);
         shell.GetComponent<Animator>().speed = LumbererManager.I.navMeshAgentSpeed * speedScale * .75f;
         shell.GetComponent<NavMeshAgent>().speed = LumbererManager.I.navMeshAgentSpeed * speedScale;
 
@@ -218,6 +218,7 @@ public class Lumberer : MonoBehaviour, IEntity
         this.health -= damage;
         if (health <= 0f && isAlive)
         {
+            isAlive = false;
             Death();
         } 
         else

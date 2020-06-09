@@ -204,6 +204,7 @@ public class Lumberer : MonoBehaviour, IEntity
         }
         shell.GetComponent<NavMeshAgent>().SetDestination(destination);  // 朝背离中心的反方向逃离（问题）
         Debug.Log($"{name} is dead, the new shell run to {destination}");
+        MainGameManager.I.IncNaturePower(-3);
 
         Destroy(gameObject);
     }

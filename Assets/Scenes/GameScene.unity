@@ -1081,6 +1081,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dispInfo: {fileID: 914548185}
   natureInfo: {fileID: 1874825884}
+  maxNaturePower: 100
 --- !u!4 &1597032265
 Transform:
   m_ObjectHideFlags: 0

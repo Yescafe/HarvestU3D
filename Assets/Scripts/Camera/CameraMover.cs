@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -32,9 +33,11 @@ public class CameraMover : MonoBehaviour
         {
             var mouseMoveDir = (new Vector3(mPos.x - Screen.width / 2, 0, mPos.y - Screen.height / 2)).normalized;
             var cameraNextPos = camera.transform.position + mouseMoveDir * mouseMoveSpeed * camera.orthographicSize;
+            var cameraHeight = camera.transform.position.y;
+            var deltaZSinceHeight = cameraHeight / Mathf.Tan(camera.transform.eulerAngles.x * (float) Math.PI / 180);
             var limitWidth = Trees.I.radius + 10f;
             if (cameraNextPos.x > -limitWidth / 2 && cameraNextPos.x < limitWidth / 2 &&
-                cameraNextPos.z > -limitWidth / 2 && cameraNextPos.z < limitWidth / 2)
+                cameraNextPos.z > -limitWidth / 2 - deltaZSinceHeight && cameraNextPos.z < limitWidth / 2 - deltaZSinceHeight)
                 camera.transform.position = cameraNextPos;
         }
 

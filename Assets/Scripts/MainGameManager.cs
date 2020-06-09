@@ -32,6 +32,8 @@ public class MainGameManager : DCLSingletonBase<MainGameManager>
     public void IncNaturePower(int point)
     {
         naturePower += point;
+        if (naturePower < 0) naturePower = 0;
+        if (naturePower > maxNaturePower) naturePower = maxNaturePower;
         UpdateNaturePower();
         if (naturePower >= maxNaturePower)
         {

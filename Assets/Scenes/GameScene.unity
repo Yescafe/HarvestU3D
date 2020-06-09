@@ -855,7 +855,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minSize: 2
-  maxSize: 6
+  maxSize: 10
   mouseMoveSpeed: 0.05
   mouseMoveAreaPercent: 0.2
   enableMouseZoom: 1

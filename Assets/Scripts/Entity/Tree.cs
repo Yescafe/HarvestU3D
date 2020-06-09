@@ -52,6 +52,8 @@ public class Tree : MonoBehaviour, IEntity
         isDead = true;
 
         // 暂时没什么办法，现在这里销毁
+        // 为版本 0.2-alpha release 版本特别加入这句，防止游戏无法进行下去
+        Trees.I.RemoveTree(this);
         Destroy(gameObject);
     }
 

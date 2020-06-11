@@ -32,7 +32,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 100092, guid: 7b7d8539cdecdd94ba53e8af65a526f6, type: 3}
       propertyPath: m_Name
-      value: lb_blueJay Variant
+      value: Bird
       objectReference: {fileID: 0}
     - target: {fileID: 400092, guid: 7b7d8539cdecdd94ba53e8af65a526f6, type: 3}
       propertyPath: m_LocalPosition.x
@@ -80,15 +80,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400092, guid: 7b7d8539cdecdd94ba53e8af65a526f6, type: 3}
       propertyPath: m_LocalScale.x
-      value: 10
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 400092, guid: 7b7d8539cdecdd94ba53e8af65a526f6, type: 3}
       propertyPath: m_LocalScale.y
-      value: 10
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 400092, guid: 7b7d8539cdecdd94ba53e8af65a526f6, type: 3}
       propertyPath: m_LocalScale.z
-      value: 10
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 11400000, guid: 7b7d8539cdecdd94ba53e8af65a526f6, type: 3}
       propertyPath: m_Enabled

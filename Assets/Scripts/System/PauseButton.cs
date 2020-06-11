@@ -16,7 +16,7 @@ public class PauseButton : MonoBehaviour
         }
         else
         {
-            Time.timeScale = 1f;
+            Time.timeScale = 15f;
             GetComponentInChildren<Text>().text = "| |";
             GetComponentInChildren<Text>().fontSize = 16;
         }

@@ -29,17 +29,21 @@ public class Trees : DCLSingletonBase<Trees>
     {
         Circle,
         GuassianSquare,
+        FixedDensity
     }
 
     Dictionary<GenerateType, Action> generators;
 
+    private HashSet<int> angles;
+
     void Awake()
     {
         generators = new Dictionary<GenerateType, Action>()
-    {
-        {GenerateType.Circle, CircleGenerate},
-        {GenerateType.GuassianSquare, GuassianGenerate}
-    };
+        {
+            {GenerateType.Circle, CircleGenerate},
+            {GenerateType.GuassianSquare, GuassianGenerate},
+            {GenerateType.FixedDensity, FixedDensityGenerate},
+        };
         GenerateTrees();
     }
 
@@ -70,13 +74,51 @@ public class Trees : DCLSingletonBase<Trees>
     public void GenerateTrees()
     {
         // 如果放在 Start 中，在 Editor 状态下不会去执行，因此放在该函数内部
-
         Helper.ClearAllChild(transform);
+        Debug.Log("Trees generating.");
         trees.Clear();
-        for (int i = 0; i < treeNumberToGen; i++)
+        // for (int i = 0; i < treeNumberToGen; i++)
+        // {
+        //     generators[generator]?.Invoke();
+        // }
+        generators[generator]?.Invoke();
+        generators[generator]?.Invoke();
+        Debug.Log($"Trees generated. trees.Count = {trees.Count}");
+    }
+
+    void FixedDensityGenerate() {
+        var density = 2;
+        angles = new HashSet<int>();
+        Debug.Log($"radius = {radius}");
+        for (var preRadius = 0; preRadius <= radius; preRadius++)
         {
-            generators[generator]?.Invoke();
-            // GuassianGenerate();
+            if (preRadius == 0)
+            {
+                // 不缩放了，防止出现一些奇怪的问题
+                CreateTree(treeCategory[(int)UnityEngine.Random.Range(0f, treeCategory.Count)], new Vector3(0f, .45f, 0f));
+                continue;
+            }
+            float angle = UnityEngine.Random.Range(0, 180) * 2;
+            while (angles.Contains((int) angle)) {
+                angle = UnityEngine.Random.Range(0, 180) * 2;  // regenerate
+            }
+            angles.Add((int) angle);
+            var cnt = (preRadius / density);
+            Debug.Log($"cnt = {cnt}");
+            for (int i = 0; i < cnt; i++)
+            {
+                var pos = new Vector3(
+                    (float) Mathf.Cos(angle) * preRadius,
+                    .45f,
+                    (float) Mathf.Sin(angle) * preRadius
+                );
+                CreateTree(treeCategory[(int)UnityEngine.Random.Range(0f, treeCategory.Count)], pos);
+                angle += 360f / cnt;
+                if (angle >= 360f) angle -= 360f;
+                angles.Add((int) angle);
+                angles.Add((int) angle + 1);
+                angles.Add((int) angle - 1);
+            }
         }
     }
 
@@ -123,7 +165,7 @@ public class Trees : DCLSingletonBase<Trees>
 
     #endregion
 
-    #region RNG
+    #region GaussianF
 
     float NextGaussian()
     {

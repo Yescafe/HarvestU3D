@@ -64,7 +64,7 @@ public class KdTree<T> : IEnumerable<T>, IEnumerable where T : Component
     /// <summary>
     /// find all objects that matches the given predicate
     /// </summary>
-    /// <param name="match">lamda expression</param>
+    /// <param name="match">lambda expression</param>
     public KdTree<T> FindAll(Predicate<T> match)
     {
         var list = new KdTree<T>(_just2D);
@@ -77,7 +77,7 @@ public class KdTree<T> : IEnumerable<T>, IEnumerable where T : Component
     /// <summary>
     /// find first object that matches the given predicate
     /// </summary>
-    /// <param name="match">lamda expression</param>
+    /// <param name="match">lambda expression</param>
     public T Find(Predicate<T> match)
     {
         var current = _root;
@@ -112,7 +112,7 @@ public class KdTree<T> : IEnumerable<T>, IEnumerable where T : Component
     /// <summary>
     /// remove all objects that matches the given predicate
     /// </summary>
-    /// <param name="match">lamda expression</param>
+    /// <param name="match">lambda expression</param>
     public void RemoveAll(Predicate<T> match)
     {
         var list = new List<KdNode>(_getNodes());
@@ -130,7 +130,7 @@ public class KdTree<T> : IEnumerable<T>, IEnumerable where T : Component
     /// <summary>
     /// count all objects that matches the given predicate
     /// </summary>
-    /// <param name="match">lamda expression</param>
+    /// <param name="match">lambda expression</param>
     /// <returns>matching object count</returns>
     public int CountAll(Predicate<T> match)
     {
@@ -198,7 +198,7 @@ public class KdTree<T> : IEnumerable<T>, IEnumerable where T : Component
     /// <summary>
     /// Method to enable foreach-loops
     /// </summary>
-    /// <returns>Enumberator</returns>
+    /// <returns>Enumerator</returns>
     public IEnumerator<T> GetEnumerator()
     {
         var current = _root;

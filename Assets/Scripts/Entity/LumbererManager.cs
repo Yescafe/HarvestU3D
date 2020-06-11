@@ -41,7 +41,7 @@ public class LumbererManager : EntityManager<Lumberer, LumbererManager>
         {
             lumberer.SetTargetTree(closestTree, minDist);
             // 为版本 0.2-alpha release 版本特别注释，防止游戏无法进行下去
-            // Trees.I.RemoveTree(closestTree);      // 将已经被占用的树从 KDTree 队列中删除
+            Trees.I.RemoveTree(closestTree);      // 将已经被占用的树从 KDTree 队列中删除
         }
     }
 

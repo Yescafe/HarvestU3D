@@ -6,11 +6,8 @@ public class BirdManager : EntityManager<Bird, BirdManager>
 {
     [SerializeField] Material birdSelectedMaterial;
     [SerializeField] Material treeSelectedMaterial;
-    [SerializeField] Material lumbererSelectedMaterial;
-    [SerializeField] Material unSelectedMaterial;
-
-    private Material[] treeUnSelectedMaterials;
-    private Material[] lumbererUnSelectedMaterials;
+    [SerializeField] Material birdUnselectedMaterial;
+    private Material[] treeUnselectedMaterials;
 
     public int spawnCount = 10;
     public float spawnHeight = 2f;
@@ -88,13 +85,8 @@ public class BirdManager : EntityManager<Bird, BirdManager>
         var mesh = curHover.GetComponentInChildren<MeshRenderer>();
         if (go.CompareTag("Tree"))
         {
-            treeUnSelectedMaterials = mesh.materials;
+            treeUnselectedMaterials = mesh.materials;
             mesh.materials = new Material[] {treeSelectedMaterial, treeSelectedMaterial};
-        }
-        else
-        {
-            lumbererUnSelectedMaterials = mesh.materials;
-            mesh.material = lumbererSelectedMaterial;
         }
     }
 
@@ -107,11 +99,7 @@ public class BirdManager : EntityManager<Bird, BirdManager>
             if (curHover.CompareTag("Tree"))
             {
                 // Debug.Log("交换回来了树的 material");
-                mesh.materials = treeUnSelectedMaterials;
-            }
-            else
-            {
-                mesh.materials = lumbererUnSelectedMaterials;
+                mesh.materials = treeUnselectedMaterials;
             }
             curHover = null;
         }
@@ -137,12 +125,12 @@ public class BirdManager : EntityManager<Bird, BirdManager>
                         break;
                     }
                 case "Tree":
-                case "Lumberer":
                     Debug.Log($"Set target to {hitCol.name} at {raycastHit.point}");
                     foreach (var bird in selectedBirds)
                     {
                         bird.SetTarget(raycastHit.point);
                     }
+                    UnHoverObject();
                     break;
                 default:
                     break;
@@ -163,7 +151,8 @@ public class BirdManager : EntityManager<Bird, BirdManager>
         Vector3 p1 = Vector3.zero;
         Vector3 p2 = Vector3.zero;
         if (rectStart.x > rectEnd.x)
-        {//这些判断是用来确保p1的xy坐标小于p2的xy坐标，因为画的框不见得就是左下到右上这个方向的
+        {
+            // 这些判断是用来确保 p1 的 xy 坐标小于 p2 的 xy 坐标，因为画的框不见得就是左下到右上这个方向的
             p1.x = rectEnd.x;
             p2.x = rectStart.x;
         }
@@ -186,9 +175,9 @@ public class BirdManager : EntityManager<Bird, BirdManager>
 
         foreach (var obj in entitys)
         {
-            Vector3 location = Camera.main.WorldToScreenPoint(obj.transform.position);//把对象的position转换成屏幕坐标
+            Vector3 location = Camera.main.WorldToScreenPoint(obj.transform.position); // 把对象的 position 转换成屏幕坐标
             if (location.x < p1.x || location.x > p2.x || location.y < p1.y || location.y > p2.y
-            || location.z < Camera.main.nearClipPlane || location.z > Camera.main.farClipPlane)//z方向就用摄像机的设定值，看不见的也不需要选择了
+            || location.z < Camera.main.nearClipPlane || location.z > Camera.main.farClipPlane) //z 方向就用摄像机的设定值，看不见的也不需要选择了
             {
                 UnSelectBird(obj);
             }
@@ -229,14 +218,14 @@ public class BirdManager : EntityManager<Bird, BirdManager>
 
     void UnSelectBird(Bird bird)
     {
-        bird.GetComponent<MeshRenderer>().material = unSelectedMaterial;
+        bird.GetComponent<MeshRenderer>().material = birdUnselectedMaterial;
         selectedBirds.Remove(bird);
     }
     void UnSelectAll()
     {
         foreach (var bird in selectedBirds)
         {
-            bird.GetComponent<MeshRenderer>().material = unSelectedMaterial;
+            bird.GetComponent<MeshRenderer>().material = birdUnselectedMaterial;
         }
         selectedBirds.Clear();
     }
@@ -247,7 +236,8 @@ public class BirdManager : EntityManager<Bird, BirdManager>
     {
         while (entitys.Count < spawnCount)
         {
-            CreateEntity(Helper.RandomOnCircle(new Vector3(0, spawnHeight, 0), 2f));
+            Bird newBird = CreateEntity(Helper.RandomOnCircle(new Vector3(0, spawnHeight, 0), 2f));
+            newBird.gameObject.GetComponent<Animator>().SetBool("flying", true);
         }
     }
 }

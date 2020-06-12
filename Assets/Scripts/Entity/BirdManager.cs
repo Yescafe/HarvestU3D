@@ -1,13 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BirdManager : EntityManager<Bird, BirdManager>
 {
-    [SerializeField] Material birdSelectedMaterial;
-    [SerializeField] Material treeSelectedMaterial;
-    [SerializeField] Material birdUnselectedMaterial;
-    private Material[] treeUnselectedMaterials;
+    [SerializeField] GameObject selectImage;
+    [SerializeField] GameObject worldUICanvas;
+    [SerializeField] Color birdSelectColor;
+    [SerializeField] Color treeSelectColor;
+    [SerializeField] Color lumbererSelectColor;
+    [SerializeField] float selectImageHeight;
 
     public int spawnCount = 10;
     public float spawnHeight = 2f;
@@ -25,11 +28,25 @@ public class BirdManager : EntityManager<Bird, BirdManager>
     /// 当前鼠标悬浮所指的物体，假设同时不可能指向两个
     /// </summary>
     private GameObject curHover;
+    /// <summary>
+    /// 当前物体对应着的选中框
+    /// </summary>
+    private Dictionary<GameObject, Image> circlesOnObjects = new Dictionary<GameObject, Image>();
+    /// <summary>
+    /// tag 对应的 color，用于避免使用条件分支
+    /// </summary>
+    private Dictionary<string, Color> tag2Color;
 
     public bool Selecting => selectedBirds.Count > 0;
 
     void Start()
     {
+        tag2Color = new Dictionary<string, Color>()
+        {
+            {"Bird", birdSelectColor},
+            {"Tree", treeSelectColor},
+            {"Lumberer", lumbererSelectColor},
+        };
         SpawnBird();
     }
 
@@ -82,12 +99,34 @@ public class BirdManager : EntityManager<Bird, BirdManager>
     {
         UnHoverObject();
         curHover = go;
-        var mesh = curHover.GetComponentInChildren<MeshRenderer>();
-        if (go.CompareTag("Tree"))
+        SetImageOnObject(curHover);
+    }
+
+    void SetImageOnObject(GameObject go)
+    {
+        Debug.Log("SetImageOnObject");
+        Image image;
+        if (!circlesOnObjects.TryGetValue(go, out image))
         {
-            treeUnselectedMaterials = mesh.materials;
-            mesh.materials = new Material[] {treeSelectedMaterial, treeSelectedMaterial};
+            circlesOnObjects[go] = Instantiate(selectImage, worldUICanvas.transform).GetComponent<Image>();
+            image = circlesOnObjects[go];
         }
+        // 更新位置 TODO 
+        var pos = go.transform.position;
+        pos.y = selectImageHeight;
+        image.transform.position = pos;
+        image.transform.rotation = Quaternion.Euler(90, 0, 0);
+
+        image.enabled = true;
+        image.color = tag2Color[go.tag];
+    }
+
+    void UnsetImageOnObject(GameObject go)
+    {
+        if (circlesOnObjects.TryGetValue(go, out var image))
+        {
+            image.enabled = false;
+        }        
     }
 
     void UnHoverObject()
@@ -96,11 +135,7 @@ public class BirdManager : EntityManager<Bird, BirdManager>
         {
             // Debug.Log("Unhover");
             var mesh = curHover.GetComponentInChildren<MeshRenderer>();
-            if (curHover.CompareTag("Tree"))
-            {
-                // Debug.Log("交换回来了树的 material");
-                mesh.materials = treeUnselectedMaterials;
-            }
+            UnsetImageOnObject(curHover);
             curHover = null;
         }
     }
@@ -124,6 +159,7 @@ public class BirdManager : EntityManager<Bird, BirdManager>
                         selectAction = true;
                         break;
                     }
+                case "Lumberer":
                 case "Tree":
                     Debug.Log($"Set target to {hitCol.name} at {raycastHit.point}");
                     foreach (var bird in selectedBirds)
@@ -205,27 +241,23 @@ public class BirdManager : EntityManager<Bird, BirdManager>
         }
     }
 
-    void SelectBird(GameObject go)
-    {
-        go.GetComponent<MeshRenderer>().material = birdSelectedMaterial;
-        selectedBirds.Add(go.GetComponent<Bird>());
-    }
+    void SelectBird(GameObject go) => SelectBird(go.GetComponent<Bird>());
     void SelectBird(Bird bird)
     {
-        bird.GetComponent<MeshRenderer>().material = birdSelectedMaterial;
+        SetImageOnObject(bird.gameObject);
         selectedBirds.Add(bird);
     }
 
     void UnSelectBird(Bird bird)
     {
-        bird.GetComponent<MeshRenderer>().material = birdUnselectedMaterial;
+        UnsetImageOnObject(bird.gameObject);
         selectedBirds.Remove(bird);
     }
     void UnSelectAll()
     {
         foreach (var bird in selectedBirds)
         {
-            bird.GetComponent<MeshRenderer>().material = birdUnselectedMaterial;
+            UnsetImageOnObject(bird.gameObject);
         }
         selectedBirds.Clear();
     }

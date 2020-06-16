@@ -30,7 +30,7 @@ public class MainGameManager : DCLSingletonBase<MainGameManager>
         CameraPostProcessing.I.SetSaturation(naturePower);    // 调整色调
         BGMPlay.I.SetVolume(70f - naturePower);               // BGM 音量随着 nature power 的升高而降低, 70 终止
         HeartBeatPlay.I.SetVolume(naturePower - 20f);         // 调整心跳音量，nature power 20 起步
-        // Debug.Log(natureInfo.color);
+        Debug.Log(natureInfo.color);
     }
 
     public void IncNaturePower(int point)

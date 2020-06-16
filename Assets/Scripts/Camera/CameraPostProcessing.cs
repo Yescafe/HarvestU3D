@@ -19,7 +19,7 @@ public class CameraPostProcessing : DCLSingletonBase<CameraPostProcessing>
 
     public void Start()
     {
-        Debug.Assert(volume.profile.TryGetSettings(out grading), "目前 Processing Volume 中未包含 ColorGrading");
+        volume.profile.TryGetSettings(out grading);
         grading.enabled = new BoolParameter { value = true };
         GetCurLiftAsTarget();
         grading.lift.value = new Vector4(1, 1, 1, 0);

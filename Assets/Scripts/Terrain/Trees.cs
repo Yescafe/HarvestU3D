@@ -83,7 +83,6 @@ public class Trees : DCLSingletonBase<Trees>
         // }
         generators[generator]?.Invoke();
         generators[generator]?.Invoke();
-        Debug.Log($"Trees generated. trees.Count = {trees.Count}");
     }
 
     void FixedDensityGenerate() {
@@ -104,7 +103,6 @@ public class Trees : DCLSingletonBase<Trees>
             }
             angles.Add((int) angle);
             var cnt = (preRadius / density);
-            Debug.Log($"cnt = {cnt}");
             for (int i = 0; i < cnt; i++)
             {
                 var pos = new Vector3(
@@ -116,8 +114,6 @@ public class Trees : DCLSingletonBase<Trees>
                 angle += 360f / cnt;
                 if (angle >= 360f) angle -= 360f;
                 angles.Add((int) angle);
-                angles.Add((int) angle + 1);
-                angles.Add((int) angle - 1);
             }
         }
     }

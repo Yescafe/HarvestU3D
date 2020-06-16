@@ -101,6 +101,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: GrassBlock
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: f9758d3e55a438840bb5e16ea1dcc385,
+        type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f9758d3e55a438840bb5e16ea1dcc385, type: 3}
 --- !u!1 &6131581603446543078 stripped

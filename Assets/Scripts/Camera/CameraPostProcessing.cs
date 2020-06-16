@@ -9,7 +9,7 @@ using UnityEngine.Rendering.PostProcessing;
 /// 游戏启动则会记录该值 到 targetLift，并重置 Lift 为 0
 /// 之后设置 SetDroopEffect 来得到默认Lift 到 目标 Lift 的插值程度
 /// </summary>
-public class CameraPostProcessing : MonoBehaviour
+public class CameraPostProcessing : DCLSingletonBase<CameraPostProcessing>
 {
     [SerializeField] PostProcessVolume volume;
     ColorGrading grading;
@@ -23,7 +23,8 @@ public class CameraPostProcessing : MonoBehaviour
         grading.enabled = new BoolParameter { value = true };
         GetCurLiftAsTarget();
         grading.lift.value = new Vector4(1, 1, 1, 0);
-        SetDroopEffect(0f);
+        // SetDroopEffect(0f);
+        SetSaturation(0f);
     }
 
     public void GetCurLiftAsTarget()
@@ -44,7 +45,17 @@ public class CameraPostProcessing : MonoBehaviour
     /// <param name="degree"> 0 - 1f 的枯萎程度 </param>
     public void SetDroopEffect(float degree)
     {
-        degree = Mathf.Clamp01(degree);
-        grading.lift.Interp(new Vector4(1, 1, 1, 0), targetLift, degree);
+        // degree = Mathf.Clamp01(degree);
+        // grading.lift.Interp(new Vector4(0.1f, 0.1f, .5f, 0), targetLift, degree);
+        grading.lift.value = new Vector4(0.1f, .1f, .1f, 0);
+    }
+
+    /// <summary>
+    /// 后处理设置 画面色调
+    /// </summary>
+    /// <param name="degree"> 0f - 100f 的掉色程度，100f 为全黑白 </param>
+    public void SetSaturation(float degree)
+    {
+        grading.saturation.value = -degree;
     }
 }

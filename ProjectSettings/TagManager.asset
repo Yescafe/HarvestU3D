@@ -8,6 +8,8 @@ TagManager:
   - Bird
   - Lumberer
   - Underground
+  - lb_bird
+  - Ground
   layers:
   - Default
   - TransparentFX
@@ -17,7 +19,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - Ground
   - Bird
   - Tree
   - Lumberer

@@ -4,18 +4,13 @@ using System.Collections.Generic;
 using System.Data;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class MainGameManager : DCLSingletonBase<MainGameManager>
 {
-    [NonSerialized] public bool isLumbererWon = false;
-    [NonSerialized] public bool isNatureWon = false;
-
-    public Text dispInfo;
     public Text natureInfo;
     public int maxNaturePower = 100;
     
-
-    public GameObject ground;
 
     private int naturePower = 0;
     [NonSerialized] public int treeCnt = 0;
@@ -23,20 +18,8 @@ public class MainGameManager : DCLSingletonBase<MainGameManager>
 
     void Start()
     {
-        UpdateNaturePower();
-
-        // Test material
-        List<Material> m = new List<Material>();
-        ground.GetComponent<Renderer>().GetMaterials(m);
-        Debug.Log($"grass color = {m[0].color}");
-        m[0].color = new Color(
-            m[0].color.r,
-            m[0].color.g / 2,
-            m[0].color.b,
-            m[0].color.a / 2
-        );
-
         maxTreeCnt = Trees.I.trees.Count;
+        UpdateNaturePower();
     }
 
     private void UpdateNaturePower()
@@ -44,6 +27,9 @@ public class MainGameManager : DCLSingletonBase<MainGameManager>
         var maxRedness = .6f;
         natureInfo.text = $"{naturePower} / {maxNaturePower}\n{treeCnt} / {maxTreeCnt}";
         natureInfo.color = new Color(1f, 1f - .01f * maxRedness * naturePower, 1f - .01f * maxRedness * naturePower, 1f);
+        CameraPostProcessing.I.SetSaturation(naturePower);    // 调整色调
+        BGMPlay.I.SetVolume(70f - naturePower);               // BGM 音量随着 nature power 的升高而降低, 70 终止
+        HeartBeatPlay.I.SetVolume(naturePower - 20f);         // 调整心跳音量，nature power 20 起步
         // Debug.Log(natureInfo.color);
     }
 
@@ -55,9 +41,7 @@ public class MainGameManager : DCLSingletonBase<MainGameManager>
         UpdateNaturePower();
         if (naturePower >= maxNaturePower)
         {
-            isLumbererWon = true;
-            isNatureWon = false;
-            dispInfo.text = "Lumberers Won!";
+            SceneManager.LoadScene("GameOver");
         }
     }
 }

@@ -9,7 +9,7 @@ public class BirdManager : EntityManager<Bird, BirdManager>
     [SerializeField] GameObject worldUICanvas;
     [SerializeField] Color birdSelectColor;
     [SerializeField] Color treeSelectColor;
-    [SerializeField] Color lumbererSelectColor;
+    // [SerializeField] Color lumbererSelectColor;
     [SerializeField] float selectImageHeight;
 
     public int spawnCount = 10;
@@ -45,7 +45,7 @@ public class BirdManager : EntityManager<Bird, BirdManager>
         {
             {"Bird", birdSelectColor},
             {"Tree", treeSelectColor},
-            {"Lumberer", lumbererSelectColor},
+            // {"Lumberer", lumbererSelectColor},
         };
         SpawnBird();
     }
@@ -84,7 +84,7 @@ public class BirdManager : EntityManager<Bird, BirdManager>
         {
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit raycastHit;
-            if (Physics.Raycast(ray, out raycastHit, 50f, LayerMask.GetMask("Tree", "Lumberer")))
+            if (Physics.Raycast(ray, out raycastHit, 50f, LayerMask.GetMask("Tree"/*, "Lumberer"*/)))
             {
                 HoverObject(raycastHit.collider.gameObject);
             }
@@ -159,7 +159,7 @@ public class BirdManager : EntityManager<Bird, BirdManager>
                         selectAction = true;
                         break;
                     }
-                case "Lumberer":
+                // case "Lumberer":
                 case "Tree":
                     Debug.Log($"Set target to {hitCol.name} at {raycastHit.point}");
                     foreach (var bird in selectedBirds)

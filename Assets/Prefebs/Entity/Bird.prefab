@@ -21,8 +21,8 @@ MonoBehaviour:
   atk: 2
   atkRange: 0.2
   atkCD: 1
-  moveVel: 0.6
-  moveBackVel: -1.2
+  moveVel: 1
+  moveBackVel: -0.8
 --- !u!1001 &4152363894111020497
 PrefabInstance:
   m_ObjectHideFlags: 0

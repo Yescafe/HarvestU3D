@@ -23,6 +23,7 @@ public class Bird : MonoBehaviour, IEntity
     private Lumberer toChase = null;
     private float curVel;
 
+    [NonSerialized] public bool flyToTree = false;
 
     public bool Chasing => toChase != null;
     public bool idling => curState == Idle;
@@ -67,7 +68,15 @@ public class Bird : MonoBehaviour, IEntity
 
     void UpdateTarget()
     {
-        if (Chasing)
+        if (flyToTree)     // 玩家控制鸟飞向树的优先级最高
+        {
+            toChase = null;
+            if (Vector3.Distance(target, transform.position) < 1.5f)
+            {
+                flyToTree = false;
+            }
+        }
+        else if (Chasing)
         {
             target = toChase.transform.position + Vector3.up * toChase.transform.localScale.y;
         }

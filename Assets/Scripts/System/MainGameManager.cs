@@ -15,11 +15,38 @@ public class MainGameManager : DCLSingletonBase<MainGameManager>
     private int naturePower = 0;
     [NonSerialized] public int treeCnt = 0;
     private int maxTreeCnt;
+    private int spendMinutes = 0;
 
+    private int updateTimeUnit = 60;                    // 60s is default
+
+    int lumbererSpawnAmountPreUTU = 6;               // lumberer spawn amount pre updateTimeUnit 
+    int deltaLumbererSpawnAmountPreUTU = 3;          // update delta of lumberer spawn amount pre updateTimeUnit 
     void Start()
     {
         maxTreeCnt = Trees.I.trees.Count;
         UpdateNaturePower();
+    }
+
+    private void Update()
+    {
+        var unit = updateTimeUnit;
+        float timeScaleIncDegree = .1f;                           // .1f speed per 1 minute is default
+        int nowSpendMinutes = (int) Time.realtimeSinceStartup / unit + 1;    // do behavior pre `unit` second
+        if (nowSpendMinutes > spendMinutes) {
+            // world time scale
+            PauseButton.I.curTimeScale += timeScaleIncDegree;
+            spendMinutes = nowSpendMinutes;
+            Time.timeScale = PauseButton.I.curTimeScale;  // Update world time scale
+            
+            // updates of lumberer manager 
+            var lm = LumbererManager.I;
+            lumbererSpawnAmountPreUTU += deltaLumbererSpawnAmountPreUTU;
+            lm.Spawn(lumbererSpawnAmountPreUTU, (float) unit / lumbererSpawnAmountPreUTU);
+
+            // updates of bird manager
+            var bm = BirdManager.I;
+
+        }
     }
 
     private void UpdateNaturePower()

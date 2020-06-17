@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
-public class PauseButton : MonoBehaviour
+public class PauseButton : DCLSingletonBase<PauseButton>
 {
     private bool isPaused = false;
+    [NonSerialized] public float curTimeScale = 1f;
     public void OnButtonDown()
     {
         if (!isPaused)
@@ -16,7 +18,7 @@ public class PauseButton : MonoBehaviour
         }
         else
         {
-            Time.timeScale = 15f;
+            Time.timeScale = curTimeScale;
             GetComponentInChildren<Text>().text = "| |";
             GetComponentInChildren<Text>().fontSize = 16;
         }

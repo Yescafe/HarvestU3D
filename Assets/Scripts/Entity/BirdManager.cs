@@ -20,7 +20,6 @@ public class BirdManager : EntityManager<Bird, BirdManager>
     // List<Bird> birds = new List<Bird>();
     List<Bird> selectedBirds = new List<Bird>();
 
-    private float mouseDownTime = 0f;
     private bool drawRectangle = false;
     private Vector3 rectStart, rectEnd;
 
@@ -54,30 +53,15 @@ public class BirdManager : EntityManager<Bird, BirdManager>
     {
         if (Input.GetMouseButtonDown(0))
         {
-            mouseDownTime = Time.time;
             rectStart = Input.mousePosition;
-        }
-
-        if (Input.GetMouseButton(0))
-        {
-            drawRectangle = Time.time - mouseDownTime > holdDownToRectSelect;
-            if (drawRectangle)
-            {
-                CameraRectDraw.I.drawRectangle = true;
-                CameraRectDraw.I.rectStart = rectStart;
-            }
+            CameraRectDraw.I.drawRectangle = true;
+            CameraRectDraw.I.rectStart = rectStart;
         }
 
         if (Input.GetMouseButtonUp(0))
         {
-            if (Time.time - mouseDownTime < holdDownToRectSelect)
-            {
-                ClickSelect();
-            }
-            else
-            {
-                RectSelect();
-            }
+            CameraRectDraw.I.rectEnd = Input.mousePosition;
+            RectSelect();
         }
 
         if (Selecting)
@@ -164,6 +148,7 @@ public class BirdManager : EntityManager<Bird, BirdManager>
                     Debug.Log($"Set target to {hitCol.name} at {raycastHit.point}");
                     foreach (var bird in selectedBirds)
                     {
+                        bird.flyToTree = true;
                         bird.SetTarget(raycastHit.point);
                     }
                     UnHoverObject();
@@ -184,6 +169,12 @@ public class BirdManager : EntityManager<Bird, BirdManager>
     {
         CameraRectDraw.I.drawRectangle = drawRectangle = false;
         rectEnd = CameraRectDraw.I.rectEnd;
+        Debug.Log($"rectEnd = {rectEnd}, rectStart = {rectStart}");
+        if (Vector3.Distance(rectEnd, rectStart) < 10f)    // 选框过小就算点击
+        {
+            ClickSelect();
+            return;
+        }
         Vector3 p1 = Vector3.zero;
         Vector3 p2 = Vector3.zero;
         if (rectStart.x > rectEnd.x)

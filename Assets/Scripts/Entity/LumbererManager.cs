@@ -12,24 +12,47 @@ public class LumbererManager : EntityManager<Lumberer, LumbererManager>
     // minDist 的说明见 Lumberer::SetDestination::modDist
     public float minDist = .3f;
     public float distToOuterTree;
-    public int spawnCount = 1;
-    public float spawnCD = 1f;
+    public int testSpawnCount = 1;
+    public float testSpawnCD = 1f;
     public float navMeshAgentSpeed = 1f;
     public GameObject LumbererEscape;
     void Start()
     {
         ArrangeChild();
-        StartCoroutine(Spawn());
+        // for test
+        // Spawn();
     }
 
-    IEnumerator Spawn()
+    public void Spawn()
+    {
+        StartCoroutine(Spawn_());
+    }
+
+    public void Spawn(int count, float cd)
+    {
+        StartCoroutine(Spawn_(count, cd));
+    }
+
+    IEnumerator Spawn_()
     {
         var spawnRadius = distToOuterTree + Trees.I.radius;
-        while (entitys.Count < spawnCount)
+        while (entitys.Count < testSpawnCount)
         {
             var lumb = CreateEntity(Helper.RandomOnCircle(Vector3.up * lumbererHeight, spawnRadius));
             SetTargetTree4Lumberer(lumb);
-            yield return new WaitForSeconds(spawnCD);
+            yield return new WaitForSeconds(testSpawnCD);
+        }
+        yield return null;
+    }
+
+    IEnumerator Spawn_(int count, float cd)
+    {
+        var spawnRadius = distToOuterTree + Trees.I.radius;
+        for (int k = 0; k < count; k++)
+        {
+            var lumb = CreateEntity(Helper.RandomOnCircle(Vector3.up * lumbererHeight, spawnRadius));
+            SetTargetTree4Lumberer(lumb);
+            yield return new WaitForSeconds(cd);
         }
         yield return null;
     }

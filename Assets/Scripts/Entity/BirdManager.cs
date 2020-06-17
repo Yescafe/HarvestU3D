@@ -9,8 +9,8 @@ public class BirdManager : EntityManager<Bird, BirdManager>
     [SerializeField] GameObject worldUICanvas;
     [SerializeField] Color birdSelectColor;
     [SerializeField] Color treeSelectColor;
-    // [SerializeField] Color lumbererSelectColor;
-    [SerializeField] float selectImageHeight;
+    [SerializeField] Color lumbererSelectColor;
+    [SerializeField] public float selectImageHeight;
 
     public int spawnCount = 10;
     public float spawnHeight = 2f;
@@ -44,9 +44,9 @@ public class BirdManager : EntityManager<Bird, BirdManager>
         {
             {"Bird", birdSelectColor},
             {"Tree", treeSelectColor},
-            // {"Lumberer", lumbererSelectColor},
+            {"Lumberer", lumbererSelectColor},
         };
-        SpawnBird();
+        TestSpawnBirds();
     }
 
     void Update()
@@ -64,18 +64,22 @@ public class BirdManager : EntityManager<Bird, BirdManager>
             RectSelect();
         }
 
-        if (Selecting)
+        var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit raycastHit;
+        if (Physics.Raycast(ray, out raycastHit, 50f, LayerMask.GetMask("Tree", "Lumberer")))
         {
-            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit raycastHit;
-            if (Physics.Raycast(ray, out raycastHit, 50f, LayerMask.GetMask("Tree"/*, "Lumberer"*/)))
+            if (Selecting && raycastHit.collider.gameObject.CompareTag("Tree"))
             {
                 HoverObject(raycastHit.collider.gameObject);
             }
-            else
+            else if (!Selecting && raycastHit.collider.gameObject.CompareTag("Lumberer"))
             {
-                UnHoverObject();
+                HoverObject(raycastHit.collider.gameObject);
             }
+        }
+        else
+        {
+            UnHoverObject();
         }
     }
 
@@ -88,14 +92,16 @@ public class BirdManager : EntityManager<Bird, BirdManager>
 
     void SetImageOnObject(GameObject go)
     {
-        Debug.Log("SetImageOnObject");
+        // Debug.Log("SetImageOnObject");
         Image image;
         if (!circlesOnObjects.TryGetValue(go, out image))
         {
             circlesOnObjects[go] = Instantiate(selectImage, worldUICanvas.transform).GetComponent<Image>();
+            circlesOnObjects[go].GetComponent<SelectCircle>().setTrack(go);
             image = circlesOnObjects[go];
         }
-        // 更新位置 TODO 
+        // [x] 更新位置
+        // 在 SelectCircle.cs 中完成
         var pos = go.transform.position;
         pos.y = selectImageHeight;
         image.transform.position = pos;
@@ -255,12 +261,17 @@ public class BirdManager : EntityManager<Bird, BirdManager>
 
     #endregion
 
-    void SpawnBird()
+    void TestSpawnBirds()
     {
         while (entitys.Count < spawnCount)
         {
-            Bird newBird = CreateEntity(Helper.RandomOnCircle(new Vector3(0, spawnHeight, 0), 2f));
-            newBird.gameObject.GetComponent<Animator>().SetBool("flying", true);
+            SpawnBird(Helper.RandomOnCircle(new Vector3(0, spawnHeight, 0), 2f));
         }
+    }
+
+    void SpawnBird(Vector3 pos)
+    {
+        Bird newBird = CreateEntity(pos);
+        newBird.gameObject.GetComponent<Animator>().SetBool("flying", true);
     }
 }

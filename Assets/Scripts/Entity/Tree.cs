@@ -38,7 +38,7 @@ public class Tree : MonoBehaviour, IEntity
     
     void Death(GameObject murderer)
     {
-        BirdManager.I.circlesOnObjects[gameObject].enabled = false;
+        BirdManager.I.circlesOnObjects.Remove(gameObject);
         DeathAnimation();
 
         var position = transform.position;
@@ -50,6 +50,7 @@ public class Tree : MonoBehaviour, IEntity
         Debug.Log($"{name} deathRotationTheta = {deathRotationTheta}");
 
         Trees.I.RemoveTree(this);
+        Trees.I.RemoveTreeFromUnaimmed(this);
         isDead = true;
         ++MainGameManager.I.treeCnt;
         // 暂时没什么办法，现在这里销毁

@@ -2563,7 +2563,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 1
   turnSpeed: 100
-  atk: 2
+  atk: 1
   takeDamageCD: 1
   health: 10
 --- !u!195 &635406493

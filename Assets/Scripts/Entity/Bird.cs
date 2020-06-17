@@ -37,7 +37,7 @@ public class Bird : MonoBehaviour, IEntity
 
     void Update()
     {
-        ScreenLogger.I.Clear();
+        // ScreenLogger.I.Clear();
         // if (Input.GetMouseButtonDown(0))
         // {
         //     SetTargetOnPlane();
@@ -91,7 +91,6 @@ public class Bird : MonoBehaviour, IEntity
     /// </summary>
     public bool WatchLumberer()
     {
-        //            
         var lumb = LumbererManager.I.GetClosest(transform.position);
         if (lumb == null)
         {
@@ -151,11 +150,11 @@ public class Bird : MonoBehaviour, IEntity
             targetRotZ = maxRotZ;
         }
         // 瞄准对方了，尝试进行攻击
-        else if (Chasing && dist < attackDist)
-        {
-            float dy = Mathf.Abs(target.y - transform.position.y);
-            targetRotX = -Mathf.Asin(dy / dist);
-        }
+        // if (Chasing && dist < attackDist)
+        // {
+        //     float dy = Mathf.Abs(target.y - transform.position.y);
+        //     targetRotX = -Mathf.Asin(dy / dist);
+        // }
 
         rot.y += deltaRotY;
         if (Mathf.Abs(Mathf.DeltaAngle(rot.z, targetRotZ)) > 0.1f)
@@ -163,7 +162,7 @@ public class Bird : MonoBehaviour, IEntity
         if (Mathf.Abs(Mathf.DeltaAngle(rot.x, targetRotX)) > 0.1f)
             rot.x = Mathf.LerpAngle(rot.x, targetRotX, Time.deltaTime * rotXScale);
 
-        ScreenLogger.I.Add($"RotZ {rot.z}\n RotY {rot.y}\n deltaRotY {deltaRotY}\n {local2TargetDir}\n\n");
+        // ScreenLogger.I.Add($"RotZ {rot.z}\n RotY {rot.y}\n deltaRotY {deltaRotY}\n {local2TargetDir}\n\n");
         transform.rotation = Quaternion.Euler(rot);
     }
 
@@ -183,7 +182,6 @@ public class Bird : MonoBehaviour, IEntity
             {
                 Debug.Log($"找到最近可以飞回的树木了 {tree.name}", gameObject);
                 target = tree.transform.position;
-                flyToTree = true;
                 curState = Aim2Target;
             }
             else
@@ -203,7 +201,7 @@ public class Bird : MonoBehaviour, IEntity
         // 因此除以 atkCD，
         curVel = Mathf.Lerp(curVel, moveVel, Time.deltaTime / atkCD);
 
-        ScreenLogger.I.AddLine($"target {target}, deltaPos {deltaPos}, distance {distance}");
+        // ScreenLogger.I.AddLine($"target {target}, deltaPos {deltaPos}, distance {distance}");
 
         if (distance < atkRange)
         {

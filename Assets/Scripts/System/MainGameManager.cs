@@ -19,8 +19,8 @@ public class MainGameManager : DCLSingletonBase<MainGameManager>
 
     private int updateTimeUnit = 60;                    // 60s is default
 
-    int lumbererSpawnAmountPreUTU = 6;               // lumberer spawn amount pre updateTimeUnit 
-    int deltaLumbererSpawnAmountPreUTU = 3;          // update delta of lumberer spawn amount pre updateTimeUnit 
+    public int lumbererSpawnAmountPreUTU = 7;                // lumberer spawn amount pre updateTimeUnit 
+    public int deltaLumbererSpawnAmountPreUTU = 4;          // update delta of lumberer spawn amount pre updateTimeUnit 
     void Start()
     {
         maxTreeCnt = Trees.I.trees.Count;
@@ -30,7 +30,7 @@ public class MainGameManager : DCLSingletonBase<MainGameManager>
     private void Update()
     {
         var unit = updateTimeUnit;
-        float timeScaleIncDegree = .1f;                           // .1f speed per 1 minute is default
+        float timeScaleIncDegree = .15f;                           // .1f speed per 1 minute is default
         int nowSpendMinutes = (int) Time.realtimeSinceStartup / unit + 1;    // do behavior pre `unit` second
         if (nowSpendMinutes > spendMinutes) {
             // world time scale
@@ -45,18 +45,22 @@ public class MainGameManager : DCLSingletonBase<MainGameManager>
 
             // updates of bird manager
             var bm = BirdManager.I;
-
         }
+        if (Time.realtimeSinceStartup % 10 == 9)
+            IncNaturePower(.5f);
     }
 
     private void UpdateNaturePower()
     {
         var maxRedness = .75f;
-        natureInfo.text = $"{(int) naturePower} / {(int) maxNaturePower}";
+        natureInfo.text = $"收获值：{(int) naturePower} / {(int) maxNaturePower}";
         natureInfo.color = new Color(1f, 1f - .01f * maxRedness * naturePower, 1f - .01f * maxRedness * naturePower, 1f);
         CameraPostProcessing.I.SetSaturation(naturePower);    // 调整色调
         BGMPlay.I.SetVolume(70f - naturePower);               // BGM 音量随着 nature power 的升高而降低, 70 终止
-        HeartBeatPlay.I.SetVolume(naturePower - 20f);         // 调整心跳音量，nature power 20 起步
+        if (naturePower > 20f)            // 调整心跳音量，nature power 20 起步
+            HeartBeatPlay.I.SetVolume(naturePower);
+        else
+            HeartBeatPlay.I.SetVolume(0);
     }
 
     public void IncNaturePower(float point)
@@ -75,7 +79,7 @@ public class MainGameManager : DCLSingletonBase<MainGameManager>
     {
         float incPower = 0;
         if (category == "AxeHit") incPower = 1f;
-        else if (category == "LumbererEscape")  incPower = -4.5f;
+        else if (category == "LumbererEscape")  incPower = -4f;
         else if (category == "SpawnBird") incPower = 4f;
         IncNaturePower(incPower);
     }

@@ -16,9 +16,8 @@ public class Trees : DCLSingletonBase<Trees>
     // TODO[-] 修改成 private
     // 将“trees 队列”的意义定义为“等待被预约的 tree 队列”
     public KdTree<Tree> trees = new KdTree<Tree>();
-    // TODO[x] 被伐木人瞄准了的树木，在这里的所有树，会在 GetClosestTree 的查找内容中忽略
-    // 该内容以全权转接给 this.trees 实现，无须重复实现 (LumbererManager.cs:54)
-    // private HashSet<Tree> aimedTrees = new HashSet<Tree>();
+    // TODO[x] 未伐木人瞄准了的树木
+    public KdTree<Tree> unaimedTrees = new KdTree<Tree>();
 
     // TODO 如何序列化这玩意，以便在 Inspector 进行修改
     public GenerateType generator;
@@ -48,6 +47,7 @@ public class Trees : DCLSingletonBase<Trees>
     }
 
     public Tree GetClosestTree(Vector3 pos) => trees.FindClosest(pos);
+    public Tree GetClosestUnaimedTree(Vector3 pos) => unaimedTrees.FindClosest(pos);
 
     public void RegisterTree(Tree tree)
     {
@@ -68,6 +68,21 @@ public class Trees : DCLSingletonBase<Trees>
         return ret;
     }
 
+    public bool RemoveTreeFromUnaimmed(Tree tree)
+    {
+        bool ret = true;
+        for (int idx = 0; idx != unaimedTrees.Count; idx++)
+        {
+            if (unaimedTrees[idx] == tree)
+            {
+                unaimedTrees.RemoveAt(idx);
+                ret = false;
+                break;
+            }
+        }
+        return ret;
+    }
+
     #region Generation
 
     [ContextMenu("Generate Trees")]
@@ -77,12 +92,13 @@ public class Trees : DCLSingletonBase<Trees>
         Helper.ClearAllChild(transform);
         Debug.Log("Trees generating.");
         trees.Clear();
-        // for (int i = 0; i < treeNumberToGen; i++)
-        // {
-        //     generators[generator]?.Invoke();
-        // }
-        generators[generator]?.Invoke();
-        generators[generator]?.Invoke();
+        unaimedTrees.Clear();
+        for (int i = 0; i < treeNumberToGen; i++)
+        {
+            generators[generator]?.Invoke();
+        }
+        // generators[generator]?.Invoke();
+        // generators[generator]?.Invoke();
     }
 
     void FixedDensityGenerate() {
@@ -157,6 +173,7 @@ public class Trees : DCLSingletonBase<Trees>
         newTreeHolder.transform.localScale *= scale;
         newTreeHolder.gameObject.name = $"TreeHolder {trees.Count}";
         trees.Add(newTreeHolder.GetComponent<Tree>());
+        unaimedTrees.Add(newTreeHolder.GetComponent<Tree>());
     }
 
     #endregion

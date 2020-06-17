@@ -197,23 +197,21 @@ public class Lumberer : MonoBehaviour, IEntity
         Vector3 destination = new Vector3();
         destination.y = position.y;
         // 将当前的坐标等比例缩放到边界上的坐标，设置为 destination
-        if (position.x > position.z)
+        if (Mathf.Abs(position.x) > Mathf.Abs(position.z))
         {
-            destination.x = limit;
+            destination.x = limit * (position.x / Mathf.Abs(position.x) == 0 ? 1 : position.x / Mathf.Abs(position.x));
             destination.z = position.z * (destination.x / position.x);
         }
         else
         {
-            destination.z = limit;
+            destination.z = limit * (position.z / Mathf.Abs(position.z) == 0 ? 1 : position.z / Mathf.Abs(position.z));
             destination.x = position.x * (destination.z / position.z);
         }
         shell.GetComponent<NavMeshAgent>().SetDestination(destination);  // 朝背离中心的反方向逃离（问题）
         Debug.Log($"{name} is dead, the new shell run to {destination}");
-        // if (closestTree != null) {
-        //     var cnted = Trees.I.trees.Count;
-        //     Trees.I.trees.Add(closestTree);
-        //     Debug.Log($"trees.cnted = {cnted}, trees.Count = {Trees.I.trees.Count}");
-        // }
+        if (closestTree != null) {
+            Trees.I.unaimedTrees.Add(closestTree);
+        }
         MainGameManager.I.IncNaturePower("LumbererEscape");
 
         Destroy(gameObject);

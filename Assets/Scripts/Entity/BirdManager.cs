@@ -47,7 +47,7 @@ public class BirdManager : EntityManager<Bird, BirdManager>
             {"Tree", treeSelectColor},
             {"Lumberer", lumbererSelectColor},
         };
-        TestSpawnBirds();
+        // TestSpawnBirds();
     }
 
     void Update()
@@ -65,6 +65,13 @@ public class BirdManager : EntityManager<Bird, BirdManager>
             RectSelect();
         }
 
+        if (Input.GetMouseButtonDown(1))
+        {
+            var pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            BirdManager.I.SpawnBird(new Vector3(pos.x, spawnHeight, pos.z + 10));
+            MainGameManager.I.IncNaturePower("SpawnBird");
+        }
+
         var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit raycastHit;
         if (Physics.Raycast(ray, out raycastHit, 50f, LayerMask.GetMask("Tree", "Lumberer")))
@@ -75,7 +82,8 @@ public class BirdManager : EntityManager<Bird, BirdManager>
             }
             else if (!Selecting && raycastHit.collider.gameObject.CompareTag("Lumberer"))
             {
-                HoverObject(raycastHit.collider.gameObject);
+                var lumb = raycastHit.collider.gameObject;
+                HoverObject(lumb);
             }
         }
         else
@@ -150,7 +158,14 @@ public class BirdManager : EntityManager<Bird, BirdManager>
                         selectAction = true;
                         break;
                     }
-                // case "Lumberer":
+                case "Lumberer":
+                    Debug.Log($"Set target to {hitCol.name} at {raycastHit.point}");
+                    foreach (var bird in selectedBirds)
+                    {
+                        bird.SetTarget(raycastHit.point);
+                    }
+                    UnHoverObject();
+                    break;
                 case "Tree":
                     Debug.Log($"Set target to {hitCol.name} at {raycastHit.point}");
                     foreach (var bird in selectedBirds)

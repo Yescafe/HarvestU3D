@@ -1054,9 +1054,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f85b7c071ce1ed048b4dceaabe4e6514, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minSize: 2
+  minSize: 4
   maxSize: 10
-  mouseMoveSpeed: 0.05
+  mouseMoveSpeed: 0.07
   mouseMoveAreaPercent: 0.05
   enableMouseZoom: 1
 --- !u!114 &963194230
@@ -1321,7 +1321,7 @@ MonoBehaviour:
   worldUICanvas: {fileID: 344163751}
   birdSelectColor: {r: 0.6650944, g: 0.89648366, b: 1, a: 1}
   treeSelectColor: {r: 1, g: 0.98593307, b: 0.28773582, a: 1}
-  lumbererSelectColor: {r: 1, g: 0.25984293, b: 0.16509432, a: 0}
+  lumbererSelectColor: {r: 1, g: 0.2914046, b: 0.2028302, a: 1}
   selectImageHeight: 1
   spawnCount: 10
   spawnHeight: 2
@@ -1589,6 +1589,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   natureInfo: {fileID: 1874825884}
   maxNaturePower: 100
+  lumbererSpawnAmountPreUTU: 6
+  deltaLumbererSpawnAmountPreUTU: 3
 --- !u!4 &1597032265
 Transform:
   m_ObjectHideFlags: 0
@@ -1718,8 +1720,8 @@ MonoBehaviour:
   treeTemplate: {fileID: 4633143647473668587, guid: 8923967a67f72334ca1eb70327108f60,
     type: 3}
   radius: 10
-  treeNumberToGen: 50
-  generator: 2
+  treeNumberToGen: 70
+  generator: 0
   treeStump: {fileID: 5079483379922088729, guid: fc82d2f47392d624e9cb3a53063d92ff,
     type: 3}
 --- !u!4 &1686660993
@@ -1945,8 +1947,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 120, y: -120}
-  m_SizeDelta: {x: 200, y: 200}
+  m_AnchoredPosition: {x: 220, y: -120}
+  m_SizeDelta: {x: 400, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1874825884
 MonoBehaviour:
@@ -2008,7 +2010,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2057312563
 RectTransform:
   m_ObjectHideFlags: 0

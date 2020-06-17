@@ -9,10 +9,10 @@ using UnityEngine.SceneManagement;
 public class MainGameManager : DCLSingletonBase<MainGameManager>
 {
     public Text natureInfo;
-    public int maxNaturePower = 100;
+    public float maxNaturePower = 100;
     
 
-    private int naturePower = 0;
+    private float naturePower = 0;
     [NonSerialized] public int treeCnt = 0;
     private int maxTreeCnt;
     private int spendMinutes = 0;
@@ -51,16 +51,15 @@ public class MainGameManager : DCLSingletonBase<MainGameManager>
 
     private void UpdateNaturePower()
     {
-        var maxRedness = .6f;
-        natureInfo.text = $"{naturePower} / {maxNaturePower}\n{treeCnt} / {maxTreeCnt}";
+        var maxRedness = .75f;
+        natureInfo.text = $"{(int) naturePower} / {(int) maxNaturePower}";
         natureInfo.color = new Color(1f, 1f - .01f * maxRedness * naturePower, 1f - .01f * maxRedness * naturePower, 1f);
         CameraPostProcessing.I.SetSaturation(naturePower);    // 调整色调
         BGMPlay.I.SetVolume(70f - naturePower);               // BGM 音量随着 nature power 的升高而降低, 70 终止
         HeartBeatPlay.I.SetVolume(naturePower - 20f);         // 调整心跳音量，nature power 20 起步
-        Debug.Log(natureInfo.color);
     }
 
-    public void IncNaturePower(int point)
+    public void IncNaturePower(float point)
     {
         naturePower += point;
         if (naturePower < 0) naturePower = 0;
@@ -71,4 +70,14 @@ public class MainGameManager : DCLSingletonBase<MainGameManager>
             SceneManager.LoadScene("GameOver");
         }
     }
+
+    public void IncNaturePower(String category)
+    {
+        float incPower = 0;
+        if (category == "AxeHit") incPower = 1f;
+        else if (category == "LumbererEscape")  incPower = -4.5f;
+        else if (category == "SpawnBird") incPower = 4f;
+        IncNaturePower(incPower);
+    }
+
 }

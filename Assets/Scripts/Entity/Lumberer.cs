@@ -209,12 +209,12 @@ public class Lumberer : MonoBehaviour, IEntity
         }
         shell.GetComponent<NavMeshAgent>().SetDestination(destination);  // 朝背离中心的反方向逃离（问题）
         Debug.Log($"{name} is dead, the new shell run to {destination}");
-        if (closestTree != null) {
-            var cnted = Trees.I.trees.Count;
-            Trees.I.trees.Add(closestTree);
-            Debug.Log($"trees.cnted = {cnted}, trees.Count = {Trees.I.trees.Count}");
-        }
-        MainGameManager.I.IncNaturePower(-2);
+        // if (closestTree != null) {
+        //     var cnted = Trees.I.trees.Count;
+        //     Trees.I.trees.Add(closestTree);
+        //     Debug.Log($"trees.cnted = {cnted}, trees.Count = {Trees.I.trees.Count}");
+        // }
+        MainGameManager.I.IncNaturePower("LumbererEscape");
 
         Destroy(gameObject);
     }

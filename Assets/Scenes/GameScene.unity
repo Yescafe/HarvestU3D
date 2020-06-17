@@ -1314,13 +1314,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33a4e60805256ad46884654963de22f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  entityPrefab: {fileID: 4152363894110987053, guid: fbf48a053138691479c5c02558d57a6f,
+  entityPrefab: {fileID: 4152363894111020821, guid: fbf48a053138691479c5c02558d57a6f,
     type: 3}
   selectImage: {fileID: 4888191405575074532, guid: 8fb1cc08fb1b93a42b81a1ab49ba4f85,
     type: 3}
   worldUICanvas: {fileID: 344163751}
   birdSelectColor: {r: 0.6650944, g: 0.89648366, b: 1, a: 1}
   treeSelectColor: {r: 1, g: 0.98593307, b: 0.28773582, a: 1}
+  lumbererSelectColor: {r: 1, g: 0.25984293, b: 0.16509432, a: 0}
   selectImageHeight: 1
   spawnCount: 10
   spawnHeight: 2

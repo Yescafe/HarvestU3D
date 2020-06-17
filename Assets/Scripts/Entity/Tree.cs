@@ -38,6 +38,7 @@ public class Tree : MonoBehaviour, IEntity
     
     void Death(GameObject murderer)
     {
+        BirdManager.I.circlesOnObjects[gameObject].enabled = false;
         DeathAnimation();
 
         var position = transform.position;

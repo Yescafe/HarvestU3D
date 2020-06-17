@@ -30,7 +30,7 @@ public class Axe : MonoBehaviour
             other.gameObject.GetComponent<Tree>().TakeDamage(power, gameObject);
             lumberer.isHit = true;
             // 一旦树木受到伤害，自然之怒就会增长
-            MainGameManager.I.IncNaturePower(1);
+            MainGameManager.I.IncNaturePower("AxeHit");
 
             // 还有一个部分有待实现的，鸟每击退一个伐木人，自然之怒减 1
 

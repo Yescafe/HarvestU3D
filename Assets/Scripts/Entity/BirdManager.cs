@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class BirdManager : EntityManager<Bird, BirdManager>
 {
@@ -18,7 +19,7 @@ public class BirdManager : EntityManager<Bird, BirdManager>
     public float holdDownToRectSelect = 0.2f;
 
     // List<Bird> birds = new List<Bird>();
-    List<Bird> selectedBirds = new List<Bird>();
+    [NonSerialized] public List<Bird> selectedBirds = new List<Bird>();
 
     private bool drawRectangle = false;
     private Vector3 rectStart, rectEnd;
@@ -30,7 +31,7 @@ public class BirdManager : EntityManager<Bird, BirdManager>
     /// <summary>
     /// 当前物体对应着的选中框
     /// </summary>
-    private Dictionary<GameObject, Image> circlesOnObjects = new Dictionary<GameObject, Image>();
+    [NonSerialized] public Dictionary<GameObject, Image> circlesOnObjects = new Dictionary<GameObject, Image>();
     /// <summary>
     /// tag 对应的 color，用于避免使用条件分支
     /// </summary>
@@ -116,7 +117,7 @@ public class BirdManager : EntityManager<Bird, BirdManager>
         if (circlesOnObjects.TryGetValue(go, out var image))
         {
             image.enabled = false;
-        }        
+        }
     }
 
     void UnHoverObject()

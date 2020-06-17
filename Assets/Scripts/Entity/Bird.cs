@@ -44,7 +44,6 @@ public class Bird : MonoBehaviour, IEntity
         // }
         UpdateTarget();
         curState();
-
         MoveForward();
     }
 
@@ -74,6 +73,7 @@ public class Bird : MonoBehaviour, IEntity
             if (Vector3.Distance(target, transform.position) < 1.5f)
             {
                 flyToTree = false;
+                WatchLumberer();
             }
         }
         else if (Chasing)
@@ -89,12 +89,13 @@ public class Bird : MonoBehaviour, IEntity
     /// <summary>
     /// 侦察周围 watchDist 的距离内是否有伐木人 
     /// </summary>
-    bool WatchLumberer()
+    public bool WatchLumberer()
     {
         //            
         var lumb = LumbererManager.I.GetClosest(transform.position);
         if (lumb == null)
         {
+            Debug.Log("Can't find lumberers.");
             return false;
         }
         var deltaPos = lumb.transform.position.OmitY() - transform.position.OmitY();
@@ -116,11 +117,12 @@ public class Bird : MonoBehaviour, IEntity
         var deltaPos = target - transform.position;
         var distance = deltaPos.OmitY().magnitude;
 
-        if (distance < 0.1f)
+        if (distance < 0.5f)
         {
             Debug.Log("靠近目标，停留一下", this);
             curState = Idle;
-            return;
+            if (flyToTree)
+                return;
         }
 
         Vector3 local2TargetDir = (transform.worldToLocalMatrix * deltaPos).normalized;
@@ -167,12 +169,12 @@ public class Bird : MonoBehaviour, IEntity
 
     void ChaseToAttack()
     {
-        if (!toChase.IsAlive)
+        if (!toChase || !toChase.IsAlive)
         {
             Debug.Log("目标已死");
             if (WatchLumberer())
             {
-                // TODO 目标已死后依然停留在目标上的原因 =》 watchLubmerer 得到的是这个死去的伐木人
+                // TODO[x] 目标已死后依然停留在目标上的原因 =》 watchLubmerer 得到的是这个死去的伐木人 =》死亡时伐木人已经从 KDTree 队列中删除
                 Debug.Log($"找到下一个要攻击的伐木人了 {toChase.name}", gameObject);
                 return;
             }
@@ -181,6 +183,7 @@ public class Bird : MonoBehaviour, IEntity
             {
                 Debug.Log($"找到最近可以飞回的树木了 {tree.name}", gameObject);
                 target = tree.transform.position;
+                flyToTree = true;
                 curState = Aim2Target;
             }
             else
